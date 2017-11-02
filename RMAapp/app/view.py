@@ -10,11 +10,17 @@ def index():
     from app.models import Apartment, Address
     from app.query import session
     apartments = session.query(Apartment).all()
-    UrbanaAp = []
-    for apartment in apartments:
-        if apartment.address[0].zipcode == 61801:
-            UrbanaAp.append(apartment)
 
-    return render_template('index.html', title='Home', apartments=UrbanaAp, \
-                            rows=math.ceil(len(UrbanaAp) / 3),\
-                            length=len(UrbanaAp))
+    localAp = []
+    centerZipcode = 61801
+
+    for apartment in apartments:
+        if apartment.address[0].zipcode == centerZipcode:
+            localAp.append(apartment)
+
+    print(apartments)
+    # apartments = localAp
+
+    return render_template('index.html', title='Home', apartments=apartments, \
+                            rows=math.ceil(len(apartments) / 3),\
+                            length=len(apartments))
