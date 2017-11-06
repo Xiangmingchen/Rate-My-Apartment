@@ -12,7 +12,7 @@ response = requests.get("http://www.zillow.com/webservice/GetSearchResults.htm",
 '''
 
 # The following lines request 10 more property info with one known zpid
-parameters = {'zws-id': zwsid, 'zpid': 89056297, 'count': 10, 'rentzestimate': True}
+parameters = {'zws-id': zwsid, 'zpid': 89056297, 'count': 25, 'rentzestimate': True}
 response = requests.get("http://www.zillow.com/webservice/GetComps.htm", params=parameters)
 
 
@@ -37,7 +37,8 @@ for i in range(len(zpidList)):
     zpid = int(zpidList[i].text)
     rent = int(rentList[i].text)
     address = addressList[i].find('street').text + ', ' \
-        + addressList[i].find('zipcode').text + ', ' + addressList[i].find('city').text + ', ' + addressList[i].find('state').text
+        + addressList[i].find('zipcode').text + ', ' + addressList[i].find('city').text \
+        + ', ' + addressList[i].find('state').text
     apartmentList.append(Apartment(zpid))
     apartmentList[i].set_rate(rent)
     apartmentList[i].set_address(address)
