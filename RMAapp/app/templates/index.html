@@ -31,7 +31,11 @@
 
 							  <div class="col-md-3">
 							    <div class="card" style="width: 17rem;">
-							      <img class="card-img-top" src="..." alt="Card image cap">
+                    {% if len(apartments[count[0]].image) != 0: %}
+                      <img class="card-img-top" src={{apartments[count[0]].image[0].url}} alt="Card image cap">
+                    {% else: %}
+							        <img class="card-img-top" src="..." alt="Card image cap">
+                    {% endif %}
 							      <div class="card-block">
 							        <h3 class="card-title">{{apartments[count[0]].address[0].street}}</h3>
 							        <p class="card-text">${{apartments[count[0]].rentPerMonth}} per month</p>
