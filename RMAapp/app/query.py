@@ -1,13 +1,16 @@
 # This is how to query the database
-from app.database import Base
+from app import db
 from app.models import Apartment, Address
 from sqlalchemy import create_engine
-engine = create_engine('sqlite:///apartments.db')
-Base.metadata.bind = engine
+from config import SQLALCHEMY_DATABASE_URI
 from sqlalchemy.orm import sessionmaker
-DBSession = sessionmaker()
-DBSession.bind = engine
-session = DBSession()
+
+engine = create_engine(SQLALCHEMY_DATABASE_URI)
+# Base.metadata.bind = engine
+#
+# DBSession = sessionmaker()
+# DBSession.bind = engine
+session = db.session()
 # To print zpid, address, rent per month
 # the linked tables can be accessed now
 '''
