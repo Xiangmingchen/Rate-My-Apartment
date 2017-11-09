@@ -27,6 +27,7 @@ def create_new_apartment(Zpid, rent):
                           state=apart.find('.//address/state').text)
     # a list of root of all image urls
     images = apart.findall('.//images/image/url')
+    print(images)
     images_list = []
     for image_url in images:
         new_image = Image(url=image_url.text)
