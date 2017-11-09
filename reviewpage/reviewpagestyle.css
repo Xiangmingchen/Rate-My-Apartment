@@ -1,10 +1,13 @@
 body {
     background: white;
+    z-index:1;
 }
 
 .container-fluid {
-    background: slategray;
+    background: white;
     width: auto;
+    position: relative;
+
 }
 
 img {
@@ -18,6 +21,16 @@ img {
 
 }
 
+.carousel {
+    width:540px;
+    height:360px;
+    z-index:1;
+}
+
+.anothernavbar {
+    font-color: black;
+}
+
 .panel {
     position: relative;
     border: 1px solid black;
@@ -27,4 +40,8 @@ img {
     margin: 10px;
     text-align: right;
     background-color: slategray;
+}
+
+.getting_around {
+    font-weight: 200;
 }
