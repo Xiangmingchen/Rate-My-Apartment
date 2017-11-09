@@ -8,7 +8,8 @@ import math
 @app.route('/filter')
 def filter():
 
-    requestZillowAPI.request()
+    zpid = 3197980
+    requestZillowAPI.centerRequest(zpid)
 
     from app.models import Apartment, Address
     from app.query import session
