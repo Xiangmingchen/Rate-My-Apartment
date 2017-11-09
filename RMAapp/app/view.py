@@ -1,11 +1,15 @@
 from flask import Flask, render_template, flash, redirect
 from app import app
+from app import requestZillowAPI
 import math
 
+
 @app.route('/')
-@app.route('/index')
-@app.route('/home')
-def index():
+@app.route('/filter')
+def filter():
+
+    zpid = 3197980
+    requestZillowAPI.centerRequest(zpid)
 
     from app.models import Apartment, Address
     from app.query import session
