@@ -4,27 +4,22 @@
 
 {% set count = [0] %}
 {% for i in range(rows): %}
-  <div class="row mb-3">
-    {% for j in range(3): %}
-      {% if count[0] < length: %}
-        <div class="col-md-3">
-          <div class="card" style="width: 17rem;">
-            <img class="card-img-top" src="..." alt="Card image cap">
-            <div class="card-block">
-              <h3 class="card-title">{{apartments[count[0]].address[0].street}}</h3>
-
-              <p class="card-text">${{apartments[count[0]].rentPerMonth}} per month</p>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
-              {% if count.append(count.pop() + 1) %}{% endif %}
+	<div class="row mb-3">
+	{% for j in range(3): %}
+	{% if count[0] < length: %}
+		<div class="col-md-3">
+			<div class="card" style="width: 17rem;">
+			<img class="card-img-top" src="..." alt="Card image cap">
+				<div class="card-block">
+					<h3 class="card-title">{{apartments[count[0]].address[0].street}}</h3>
+					<p class="card-text">${{apartments[count[0]].rentPerMonth}} &#47; month</p>
+              		<a href="#" class="btn btn-primary">Go somewhere</a>
+        			{% if count.append(count.pop() + 1) %}{% endif %}
+          		</div>
             </div>
-          </div>
         </div>
-      {% endif %}
+        {% endif %}
     {% endfor %}
-
-  </div>
+    </div>
 {% endfor %}
-
-
-
 {% endblock %}
