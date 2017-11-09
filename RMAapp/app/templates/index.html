@@ -6,18 +6,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
 
+<style>
+.row mb-3 {
+max-width: 800px;
+}
+.col-md-3 {
+max-width: 1000px;
+}
+card {
+max-width: 600px;
+}
+
+</style>
+
 	<main class="cd-main-content">
 		<div class="cd-tab-filter-wrapper">
-			<div class="cd-tab-filter">
-				<ul class="cd-filters">
-					<li class="placeholder">
-						<a data-type="all" href="#0">All</a> <!-- selected option on mobile -->
-					</li>
-					<li class="filter"><a class="selected" href="#0" data-type="all">All</a></li>
-					<li class="filter" data-filter=".color-1"><a href="#0" data-type="color-1">Color 1</a></li>
-					<li class="filter" data-filter=".color-2"><a href="#0" data-type="color-2">Color 2</a></li>
-				</ul> <!-- cd-filters -->
-			</div> <!-- cd-tab-filter -->
+			
 		</div> <!-- cd-tab-filter-wrapper -->
 
 		<section class="cd-gallery">
@@ -30,7 +34,7 @@
 			        {% if count[0] < length: %}
 
 							  <div class="col-md-3">
-							    <div class="card" style="width: 17rem;">
+							    <div class="card">
 							      <img class="card-img-top" src="..." alt="Card image cap">
 							      <div class="card-block">
 							        <h3 class="card-title">{{apartments[count[0]].address[0].street}}</h3>
@@ -50,71 +54,72 @@
 		<div class="cd-filter">
 			<form>
 				<div class="cd-filter-block">
-					<h4>Search</h4>
-
+					<h5>Search</h5>
+					
 					<div class="cd-filter-content">
-						<input type="search" placeholder="Try color-1...">
+						<input type="search" placeholder="Location">
 					</div> <!-- cd-filter-content -->
 				</div> <!-- cd-filter-block -->
+				
+				
 
 				<div class="cd-filter-block">
-					<h4>Check boxes</h4>
+					<h5>Price</h5>
 
 					<ul class="cd-filter-content cd-filters list">
 						<li>
 							<input class="filter" data-filter=".check1" type="checkbox" id="checkbox1">
-			    			<label class="checkbox-label" for="checkbox1">Option 1</label>
+			    			<label class="checkbox-label" for="checkbox1">&#36;</label>
 						</li>
 
 						<li>
 							<input class="filter" data-filter=".check2" type="checkbox" id="checkbox2">
-							<label class="checkbox-label" for="checkbox2">Option 2</label>
+							<label class="checkbox-label" for="checkbox2">&#36;&#36;</label>
 						</li>
 
 						<li>
 							<input class="filter" data-filter=".check3" type="checkbox" id="checkbox3">
-							<label class="checkbox-label" for="checkbox3">Option 3</label>
+							<label class="checkbox-label" for="checkbox3">&#36;&#36;&#36;</label>
+						</li>
+						
+						<li>
+							<input class="filter" data-filter=".check3" type="checkbox" id="checkbox3">
+							<label class="checkbox-label" for="checkbox3">&#36;&#36;&#36;</label>
 						</li>
 					</ul> <!-- cd-filter-content -->
 				</div> <!-- cd-filter-block -->
-
+				
+				
 				<div class="cd-filter-block">
-					<h4>Select</h4>
-
-					<div class="cd-filter-content">
-						<div class="cd-select cd-filters">
-							<select class="filter" name="selectThis" id="selectThis">
-								<option value="">Choose an option</option>
-								<option value=".option1">Option 1</option>
-								<option value=".option2">Option 2</option>
-								<option value=".option3">Option 3</option>
-								<option value=".option4">Option 4</option>
-							</select>
-						</div> <!-- cd-select -->
-					</div> <!-- cd-filter-content -->
-				</div> <!-- cd-filter-block -->
-
-				<div class="cd-filter-block">
-					<h4>Radio buttons</h4>
+					<h5>Rating</h5>
 
 					<ul class="cd-filter-content cd-filters list">
 						<li>
-							<input class="filter" data-filter="" type="radio" name="radioButton" id="radio1" checked>
-							<label class="radio-label" for="radio1">All</label>
+							<input class="filter" data-filter=".check1" type="checkbox" id="checkbox1">
+			    			<label class="checkbox-label" for="checkbox1">&#9733;&#9733;&#9733;&#9733;&#9733;</label>
 						</li>
 
 						<li>
-							<input class="filter" data-filter=".radio2" type="radio" name="radioButton" id="radio2">
-							<label class="radio-label" for="radio2">Choice 2</label>
+							<input class="filter" data-filter=".check2" type="checkbox" id="checkbox2">
+							<label class="checkbox-label" for="checkbox2">&#9733;&#9733;&#9733;&#9733;</label>
 						</li>
 
 						<li>
-							<input class="filter" data-filter=".radio3" type="radio" name="radioButton" id="radio3">
-							<label class="radio-label" for="radio3">Choice 3</label>
+							<input class="filter" data-filter=".check3" type="checkbox" id="checkbox3">
+							<label class="checkbox-label" for="checkbox3">&#9733;&#9733;&#9733;</label>
+						</li>
+						
+						<li>
+							<input class="filter" data-filter=".check3" type="checkbox" id="checkbox3">
+							<label class="checkbox-label" for="checkbox3">&#9733;&#9733;</label>
+						</li>
+						
+						<li>
+							<input class="filter" data-filter=".check3" type="checkbox" id="checkbox3">
+							<label class="checkbox-label" for="checkbox3">&#9733;</label>
 						</li>
 					</ul> <!-- cd-filter-content -->
 				</div> <!-- cd-filter-block -->
-			</form>
 
 			<a href="#0" class="cd-close">Close</a>
 		</div> <!-- cd-filter -->
