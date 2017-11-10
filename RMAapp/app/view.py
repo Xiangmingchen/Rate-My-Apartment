@@ -14,13 +14,13 @@ def filter():
 
     ## if you want to only display the apartments in a certain city, put the city
     ## zipcode at centerZipcode, and enable the following lines
-    # localAp = []
-    # centerZipcode = 61801
-    #
-    # for apartment in apartments:
-    #     if apartment.address[0].zipcode == centerZipcode:
-    #         localAp.append(apartment)
-    # apartments = localAp
+    localAp = []
+    centerZipcode = 61801
+
+    for apartment in apartments:
+        if apartment.address[0].zipcode == centerZipcode:
+            localAp.append(apartment)
+    apartments = localAp
 
     def length(a):
         return len(a)
@@ -33,6 +33,7 @@ def filter():
 
 @app.route('/update_database')
 def update_database():
-    zpid = 3197980
-    requestZillowAPI.centerRequest(zpid)
+    # zpid = 3197980
+    # requestZillowAPI.centerRequest(zpid)
+    requestZillowAPI.update_database()
     return 'Database updated'
