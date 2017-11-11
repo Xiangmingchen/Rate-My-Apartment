@@ -11,8 +11,9 @@ class Apartment(db.Model):
     zpid = Column(Integer, nullable=False)
     address = relationship('Address', backref='apartment')
     rentPerMonth = Column(Float)
-    image = relationship('Image', backref='apartment')
-    review = relationship('Review', backref='apartment')
+    image = relationship('Image', backref='apartment', cascade='save-update, merge, delete')
+    image_count = Column(Integer)
+    review = relationship('Review', backref='apartment', cascade='save-update, merge, delete')
 
     def __repr__(self):
         return '<Apartment %r>' % (self.id)
