@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, Float, Text
+from sqlalchemy import Column, ForeignKey, Integer, String, Float, Text, Boolean
 from sqlalchemy.orm import relationship
 from app import db
 
@@ -9,14 +9,15 @@ class Apartment(db.Model):
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
     zpid = Column(Integer, nullable=False)
-    address = relationship('Address', backref='apartment')
+    address = relationship('Address', backref='apartment', cascade='save-update, merge, delete')
     rentPerMonth = Column(Float)
     image = relationship('Image', backref='apartment', cascade='save-update, merge, delete')
     image_count = Column(Integer)
     review = relationship('Review', backref='apartment', cascade='save-update, merge, delete')
+    comps = Column(Boolean, default=False)
 
     def __repr__(self):
-        return '<Apartment %r>' % (self.id)
+        return '<Apartment %r>' % str(self.id)
 
 class Address(db.Model):
     __tablename__ = 'address'
@@ -26,10 +27,12 @@ class Address(db.Model):
     zipcode = Column(Integer, nullable=False)
     city = Column(String(50))
     state = Column(String(20))
+    latitude = Column(Float)
+    longitude = Column(Float)
     apartment_id = Column(Integer, ForeignKey('apartment.id'))
 
     def __repr__(self):
-        return '<Address %r>' % (self.street + ' ' + self.zipcode + ' ' + self.city + ' ' + self.state)
+        return '<Address %r>' % (self.street + ' ' + str(self.zipcode) + ' ' + self.city + ' ' + self.state)
 
 class Image(db.Model):
     __tablename__ = 'image'
