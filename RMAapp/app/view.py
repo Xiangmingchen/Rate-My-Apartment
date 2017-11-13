@@ -1,5 +1,5 @@
 from flask import Flask, render_template, flash, redirect
-from app import app, db, requestZillowAPI
+from app import app, db, data
 from app.models import Apartment, Address
 import math
 
@@ -32,21 +32,23 @@ def filter():
                             length=len(apartments), \
                             len=length)
 
-@app.route('/update_database')
+@app.route('/database/update')
 def update_database():
     # zpid = 3197980
-    # requestZillowAPI.centerRequest(zpid)
-    requestZillowAPI.update_database()
+    # data.centerRequest(zpid)
+    data.update_database()
     return 'Database updated'
 
 # 89045947
 @app.route('/center_request/<zpid>')
 def center_request(zpid):
-    requestZillowAPI.centerRequest(zpid)
-    return 'Request made'
+    request_success = data.center_request(zpid)
+    if not request_success:
+        return 'Request failed'
+    return 'Request succeeded'
 
-@app.route('/debug/<int:zpid>')
-def debug(zpid):
+@app.route('/database/<int:zpid>')
+def database(zpid):
 
     # Dispay the apartments with pictures first
     apartment = db.session.query(Apartment) \
@@ -54,4 +56,33 @@ def debug(zpid):
     if apartment:
         return 'Apartment address: %s' % (apartment.address[0].street + ' ' + apartment.address[0].city)
     else:
-        return 'No apartment: %i' % zpid
+        return 'No apartment <%i> in database' % zpid
+
+@app.route('/database/expand')
+def expand_database():
+    new_apart_count = data.expand_database()
+    return 'Added %i apartments' % new_apart_count
+
+@app.route('/database/count/<table_name>')
+def count_database_rows(table_name):
+    count = data.count_rows(table_name)
+    if count >= 0:
+        return 'There are %i in %s database' % (count, table_name)
+    else:
+        return 'Invalid table name'
+
+@app.route('/database/show_data/<table_name>')
+def show_data(table_name):
+    return data.display_data(table_name)
+
+@app.route('/get_address/<int:zpid>')
+def getaddress(zpid):
+    return data.get_address(zpid)
+
+@app.route('/database/add_new_apartment/<address>/<int:zipcode>')
+def add_new_apartment(address, zipcode):
+    success = data.add_new_apartment(address, zipcode)
+    if success:
+        return 'Apartment added'
+    else:
+        return 'Apartment adding failed'
