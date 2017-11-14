@@ -1,0 +1,14 @@
+{% from "reviewpage.html import render_field % }
+<html>
+<head>
+    <title>WTForms</title>
+</head>
+<body>
+    <form methods='POST' actions="/">
+        {{ from.csrf_token }}
+        {{ render_field(form.username) }}
+        {{ render_field(form.comment) }}
+        <input type="submit" value="Review">
+    </form>
+</body>
+</html>
