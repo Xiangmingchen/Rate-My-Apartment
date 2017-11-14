@@ -17,10 +17,9 @@ def index():
     for apartment in apartments:
         if apartment.address[0].zipcode == centerZipcode:
             localAp.append(apartment)
+    apartments = localAp
 
-    print(apartments)
-    # apartments = localAp
-
-    return render_template('index.html', title='Home', apartments=apartments, \
+    return render_template('index.html', title='Home', \
+                            apartments=apartments, \
                             rows=math.ceil(len(apartments) / 3),\
                             length=len(apartments))
