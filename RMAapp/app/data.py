@@ -4,15 +4,14 @@ import xml.dom.minidom
 from lxml import html, etree
 from app import ZillowAPI, db
 from sqlalchemy import create_engine, func
-from sqlalchemy.orm import sessionmaker
-from app.models import Apartment, Address, Image
-
+from app.models import Apartment, Address, Image, Review
 
 
 def update_database():
     current_list = db.session.query(Apartment).all()
     for apartment in current_list:
         update_apartment_info(apartment, apartment.rentPerMonth)
+
 
 def delete_if_exist(zpid):
     # delete the photos of this apartment
@@ -22,18 +21,21 @@ def delete_if_exist(zpid):
         db.session.delete(exist_apart)
         db.session.commit()
 
+
 def handle_error(apart):
     error_code = int(apart.find('.//code').text)
     if error_code < 10:
         print('Error code: %i. %s' % (error_code, apart.find('./message/text').text))
     elif error_code == 500:
-        print('Error code: 500. The zpid parameter <%s> you have provided is not valid.' % (apart.find('.//zpid').text))
+        print('Error code: 500. The zpid parameter <%s> you have provided is not valid.' % apart.find('.//zpid').text)
     elif error_code == 501 or error_code == 502:
-        print('Error code: %i. Apartment <%s>, %s' % (error_code, apart.find('.//zpid').text, apart.find('./message/text').text))
+        print('Error code: %i. Apartment <%s>, %s' % (error_code, apart.find('.//zpid').text,
+                                                      apart.find('./message/text').text))
         # if the data of this apartment is protected, delete this apartment from database
         delete_if_exist(int(apart.find('.//zpid').text))
-    else :
-        print('Unexpected error: %i' % (error_code))
+    else:
+        print('Unexpected error: %i' % error_code)
+
 
 def create_new_apartment(Zpid, rent):
     # request from GetUpdatedPropertyDetails API
@@ -74,6 +76,7 @@ def create_new_apartment(Zpid, rent):
     print('Created new apartment <%i>' % Zpid)
     return True
 
+
 def update_apartment_info(old_apart, rent):
     is_updated = False
     # update the apartment rate if it changed
@@ -105,7 +108,7 @@ def update_apartment_info(old_apart, rent):
     image_count = len(image_list)
     old_apart.image_count = image_count
     old_apart.image = image_list
-    if old_apart.address[0].longitude == None:
+    if old_apart.address[0].longitude is None:
         # add longitude and latitude to the old apartments
         old_apart.address[0].longitude = float(new_apart.find('.//address/longitude').text)
         old_apart.address[0].latitude = float(new_apart.find('.//address/latitude').text)
@@ -114,10 +117,11 @@ def update_apartment_info(old_apart, rent):
     if is_updated:
         print('Updated apartment info <%i>' % old_apart.zpid)
 
+
 def center_request(zpid):
     # check whether this apartment has been a center of request
     thisApart = db.session.query(Apartment).filter(Apartment.zpid == zpid[0]).one_or_none()
-    if thisApart != None and not thisApart.comps:
+    if thisApart is not None and not thisApart.comps:
         return 0
     # The following lines request 25 more property info with one known zpid
     parameters = {'zws-id': ZillowAPI.zwsid, 'zpid': zpid, 'count': 25, 'rentzestimate': True}
@@ -127,13 +131,15 @@ def center_request(zpid):
     error_code = int(root.find('.//code').text)
     if error_code != 0:
         print('Comp error: %i, %s' % (error_code, root.find('./message/text').text))
+        thisApart.comps = False
+        db.session.commit()
         return False
     # create a list of comparable apartments
     compList = root.findall('.//properties/comparables/comp')
     new_apart_count = 0
     # Store the apartments info into database
     for apart in compList:
-        if thisApart == None: # if this apartment is not in our database, add it to database
+        if thisApart is None:  # if this apartment is not in our database, add it to database
             if create_new_apartment(zpid, rent_handler(apart)):
                 new_apart_count += 1
         # else: # otherwise update the info for this apartment
@@ -142,6 +148,7 @@ def center_request(zpid):
     thisApart.comps = False
     db.session.commit()
     return new_apart_count
+
 
 def get_address(zpid):
     # request through GetZestimate API
@@ -156,12 +163,14 @@ def get_address(zpid):
               + apart.find('.//address/city').text + ' '
               + apart.find('.//address/state').text)
 
+
 def expand_database():
     zpid_list = db.session.query(Apartment.zpid).all()
     new_apart_count = 0
     for zpid in zpid_list:
         new_apart_count += center_request(zpid)
     return new_apart_count
+
 
 def count_rows(table_name):
     count = 0
@@ -177,25 +186,27 @@ def count_rows(table_name):
         count = -1
     return count
 
+
 def display_data(table_name):
     if table_name == 'apartment':
         apartments = db.session.query(Apartment).all()
         display = '{:3} | {:10} | {:10} | {:10} | {:6} | {:10} | {:10}'.format \
-                 ('id', 'zpid', 'addressID', 'addressNum' ,'rent','imgcount','imgNum')
+                 ('id', 'zpid', 'addressID', 'addressNum', 'rent', 'imgcount', 'imgNum')
         for apart in apartments:
             display = '\n'.join([display, '{:3} | {:10} | {:10} | {:10} | {:6} | {:10} | {:10}'.format \
                      (apart.id, apart.zpid, apart.address[0].id, len(apart.address), apart.rentPerMonth, apart.image_count, len(apart.image))])
     elif table_name == 'address':
         addresses = db.session.query(Address).all()
-        display = '{:3} | {:20} | {:7} | {:10} | {:5} | {:3}'.format \
+        display = '{:3} | {:30} | {:7} | {:10} | {:5} | {:3}'.format \
                  ('id', 'street', 'zipcode', 'city', 'state', 'aID')
         for address in addresses:
-            display = '\n'.join([display, '{:3} | {:20} | {:6} | {:10} | {:5}'.format \
+            display = '\n'.join([display, '{:3} | {:30} | {:6} | {:10} | {:5}'.format \
                      (address.id, address.street, address.zipcode, address.city, address.state)])
     else:
         display = 'Invalid table name'
     print(display)
     return display
+
 
 def add_new_apartment(address, zipcode):
     exist = db.session.query(Address).filter(Address.street == address).one_or_none()
@@ -212,6 +223,7 @@ def add_new_apartment(address, zipcode):
         if create_new_apartment(int(apart.find('.//zpid').text), rent_handler(apart)):
             return True
     return False
+
 
 def rent_handler(apart):
     amount = apart.find('.//rentzestimate/amount')
