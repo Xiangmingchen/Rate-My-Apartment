@@ -34,7 +34,7 @@ def handle_error(apart):
         # if the data of this apartment is protected, delete this apartment from database
         delete_if_exist(int(apart.find('.//zpid').text))
     else:
-        print('Unexpected error: %i' % error_code)
+        print('Unexpected error: %i.' % error_code)
 
 
 def create_new_apartment(Zpid, rent):
@@ -139,6 +139,7 @@ def center_request(zpid):
     new_apart_count = 0
     # Store the apartments info into database
     for apart in compList:
+        thisApart = db.session.query(Apartment).filter(Apartment.zpid == zpid[0]).one_or_none()
         if thisApart is None:  # if this apartment is not in our database, add it to database
             if create_new_apartment(zpid, rent_handler(apart)):
                 new_apart_count += 1
@@ -211,6 +212,7 @@ def display_data(table_name):
 def add_new_apartment(address, zipcode):
     exist = db.session.query(Address).filter(Address.street == address).one_or_none()
     if exist:
+        print('Apartment already exists, adding failed')
         return False
     # The following lines request a property info by address and zipcode
     parameters = {'zws-id': ZillowAPI.zwsid, 'address': address, \
