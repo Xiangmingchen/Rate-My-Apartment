@@ -41,6 +41,14 @@ def filter(search=None):
                             length=len(apartments), \
                             len=length)
 
+@app.route('/reviewpage/<int:zpid>')
+def reviewpage(zpid):
+    this_apart = db.session.query(Apartment).filter(Apartment.zpid == zpid).one_or_none()
+    def length(a):
+        return len(a)
+    return render_template('reviewpage.html', apartment=this_apart, \
+                                              len=length)
+
 @app.route('/database/update')
 def update_database():
     # zpid = 3197980

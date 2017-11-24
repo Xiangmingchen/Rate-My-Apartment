@@ -21,16 +21,14 @@
 		{% for j in range(length): %}
 		<div class="card">
 
-		{% if len(apartments[count[0]].image) != 0: %}
-			<a href="default.asp">
-    	    	<img class="card-cut" src="{{apartments[count[0]].image[0].url}}" class="card-cut" alt="Card">
-    	    </a>
-		{% else: %}
-			<a href="default.asp">
 
-				<img class="card-cut" src="{{ url_for('static', filename='images/Noimage.png') }}" alt="Card">
+			<a href="{{ url_for('reviewpage', zpid=apartments[count[0]].zpid) }}">
+				{% if len(apartments[count[0]].image) != 0: %}
+    	    <img class="card-cut" src="{{apartments[count[0]].image[0].url}}" class="card-cut" alt="Card">
+				{% else: %}
+					<img class="card-cut" src="{{ url_for('static', filename='images/Noimage.png') }}" alt="Card">
+				{% endif %}
 			</a>
-		{% endif %}
 			<h5>{{apartments[count[0]].address[0].street}}</h5>
 			<h5>${{apartments[count[0]].rentPerMonth}} &#47; month</h5>
 
