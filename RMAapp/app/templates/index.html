@@ -2,29 +2,39 @@
 
 {% block content %}
 
-{% set count = [0] %}
-{% for i in range(rows): %}
-  <div class="row mb-3">
-    {% for j in range(3): %}
-      {% if count[0] < length: %}
-        <div class="col-md-3">
-          <div class="card" style="width: 17rem;">
-            <img class="card-img-top" src="..." alt="Card image cap">
-            <div class="card-block">
-              <h3 class="card-title">{{apartments[count[0]].address[0].street}}</h3>
+<div class="filter">
+	<table>
+	<col width="150">
+		<tr>
+		</tr>
+		<tr align="center">
+		<input type="text" id="location" onkeyup="locSearch()" placeholder="Search location">
 
-              <p class="card-text">${{apartments[count[0]].rentPerMonth}} per month</p>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
-              {% if count.append(count.pop() + 1) %}{% endif %}
-            </div>
-          </div>
-        </div>
-      {% endif %}
-    {% endfor %}
+		</tr>
+		<tr>
+		</tr>
+	</table>
+</div>
 
-  </div>
-{% endfor %}
+<div class="scroll">
+	{% set count = [0] %}
+		{% for j in range(length): %}
+		<div class="card">
 
 
+			<a href="{{ url_for('reviewpage', zpid=apartments[count[0]].zpid) }}">
+				{% if len(apartments[count[0]].image) != 0: %}
+    	    <img class="card-cut" src="{{apartments[count[0]].image[0].url}}" class="card-cut" alt="Card">
+				{% else: %}
+					<img class="card-cut" src="{{ url_for('static', filename='images/Noimage.png') }}" alt="Card">
+				{% endif %}
+			</a>
+			<h5>{{apartments[count[0]].address[0].street}}</h5>
+			<h5>${{apartments[count[0]].rentPerMonth}} &#47; month</h5>
+
+		{% if count.append(count.pop() + 1) %}{% endif %}
+		</div>
+	 {% endfor %}
+</div>
 
 {% endblock %}
