@@ -8,7 +8,7 @@ class Apartment(db.Model):
     # Here we define columns for the table Apartment
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
-    zpid = Column(Integer, nullable=False)
+    zpid = Column(Integer, nullable=False, unique=True)
     address = relationship('Address', backref='apartment', cascade='save-update, merge, delete')
     rentPerMonth = Column(Float)
     image = relationship('Image', backref='apartment', cascade='save-update, merge, delete')

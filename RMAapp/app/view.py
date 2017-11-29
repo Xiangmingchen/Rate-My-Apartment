@@ -1,27 +1,36 @@
-from flask import Flask, render_template, flash, redirect
+from flask import Flask, render_template, flash, redirect, request, url_for
 from app import app, db, data
 from app.models import Apartment, Address
+from app.forms import SearchForm
 import math
 
 
-@app.route('/')
-@app.route('/filter')
-def filter():
+@app.route('/', methods=['GET', 'POST'])
+def homepage():
+    form = SearchForm()
+    if form.validate_on_submit():
+        search = form.search.data
+        return redirect(url_for('filter', search=search))
+    return render_template('home.html', form=form)
+
+
+@app.route('/filter/<search>')
+def filter(search=None):
 
     # Dispay the apartments with pictures first
     apartments = db.session.query(Apartment) \
                         .order_by(Apartment.image_count.desc()) \
                         .all()
 
-    ## if you want to only display the apartments in a certain city, put the city
-    ## zipcode at centerZipcode, and enable the following lines
-    # localAp = []
-    # centerZipcode = 61801
-    #
-    # for apartment in apartments:
-    #     if apartment.address[0].zipcode == centerZipcode:
-    #         localAp.append(apartment)
-    # apartments = localAp
+    # if you want to only display the apartments in a certain city, put the city
+    # zipcode at centerZipcode, and enable the following lines
+    search = search.capitalize()
+    local_apart = []
+    if search is not None:
+        for apartment in apartments:
+            if apartment.address[0].city == search:
+                local_apart.append(apartment)
+        apartments = local_apart
 
     def length(a):
         return len(a)
@@ -31,6 +40,14 @@ def filter():
                             rows=math.ceil(len(apartments) / 3),\
                             length=len(apartments), \
                             len=length)
+
+@app.route('/reviewpage/<int:zpid>')
+def reviewpage(zpid):
+    this_apart = db.session.query(Apartment).filter(Apartment.zpid == zpid).one_or_none()
+    def length(a):
+        return len(a)
+    return render_template('reviewpage.html', apartment=this_apart, \
+                                              len=length)
 
 @app.route('/database/update')
 def update_database():
@@ -86,3 +103,5 @@ def add_new_apartment(address, zipcode):
         return 'Apartment added'
     else:
         return 'Apartment adding failed'
+
+app.secret_key = 'CS196'

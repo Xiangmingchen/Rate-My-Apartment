@@ -3,16 +3,17 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="{{ url_for('static', filename='now.css') }}">
+	<title>Rate My Apartment</title>
 </head>
-<title>Rate My Apartment</title>
-</head>
+
+
 <body>
 
-<ul class="topnav">
-	<li><a class="active" href="home.html">Rate My Apartment</a></li>
-	<li class="right"><a href="#about">Log In</a></li>
-	<li class="right"><a href="#about">Sign Up</a></li>
-</ul>
+	<ul class="topnav">
+		<li><a class="active" href="{{ url_for('homepage') }}">Rate My Apartment</a></li>
+		<li class="right"><a href="#about">Log In</a></li>
+		<li class="right"><a href="#about">Sign Up</a></li>
+	</ul>
 
     {% block content %}
     {% endblock %}
