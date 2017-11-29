@@ -7,9 +7,9 @@
 
 <style>
 section.test {
-    background-image:url("back.jpg");
-    background-repeat:no-repeat;  
-    background-size:cover; 
+    background-image:url({{ url_for('static', filename='images/back.jpg') }});
+    background-repeat:no-repeat;
+    background-size:cover;
     padding-bottom:200px;
 }
 
@@ -17,14 +17,14 @@ h1 {
 	font-weight: 700;
 	text-shadow: 4px 4px 8px gray;
 	font-size:60px;
-    color:white; 
+    color:white;
 	padding-top:220px;
 	padding-bottom:30px;
-	text-align:center; 
+	text-align:center;
 }
 
 d-flex justify-content-center {
-	padding:100px; 
+	padding:100px;
 }
 
 </style>
@@ -34,14 +34,15 @@ d-flex justify-content-center {
     	<h1 class="jumbotron-heading">Rate My Apartment</h1>
     		<p class="lead text-muted"></p>
     	<div class="d-flex justify-content-center">
-    		<form class="form-inline">
-        		<input class="form-control mr-sm-2" type="text" placeholder="Search">
-        		<button class="btn btn-outline-success my-2 my-sm-3" type="submit">Search</button>
+    		<form class="form-inline" method="POST">
+				{{ form.csrf_token }}
+				{{ form.search(class="form-control mr-sm-2", placeholder="Which city are you looking for?", size=30) }}
+        		<input class="btn btn-outline-success my-2 my-sm-3" type="submit" value="Search">
     		</form>
     	</div>
     </div>
-</section> 
-    
+</section>
+
 
 
 
