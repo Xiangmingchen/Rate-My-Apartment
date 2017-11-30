@@ -195,16 +195,17 @@ def display_data(table_name):
                  ('id', 'zpid', 'addressID', 'addressNum', 'rent', 'imgcount', 'imgNum')
         for apart in apartments:
             display = '\n'.join([display, '{:3} | {:10} | {:10} | {:10} | {:6} | {:10} | {:10}'.format \
-                     (apart.id, apart.zpid, apart.address[0].id, len(apart.address), apart.rentPerMonth, apart.image_count, len(apart.image))])
+                     (apart.id, apart.zpid, apart.address[0].id, len(apart.address), apart.rentPerMonth if apart.rentPerMonth is not None else 'None', apart.image_count, len(apart.image))])
     elif table_name == 'address':
         addresses = db.session.query(Address).all()
         display = '{:3} | {:30} | {:7} | {:10} | {:5} | {:3}'.format \
                  ('id', 'street', 'zipcode', 'city', 'state', 'aID')
         for address in addresses:
-            display = '\n'.join([display, '{:3} | {:30} | {:6} | {:10} | {:5}'.format \
-                     (address.id, address.street, address.zipcode, address.city, address.state)])
+            display = '\n'.join([display, '{:3} | {:30} | {:6} | {:10} | {:5} | {}'.format \
+                     (address.id, address.street, address.zipcode, address.city, address.state, address.apartment_id)])
     else:
         display = 'Invalid table name'
+    print('%s data' % table_name)
     print(display)
     return display
 
@@ -233,3 +234,34 @@ def rent_handler(apart):
         return float(amount.text)
     else:
         return None
+
+def delete_extra_address():
+    count = 0
+    floating_addresses = db.session.query(Address).filter(Address.apartment_id == None).all()
+    for address in floating_addresses:
+        print('deleted address with id {}'.format(address.id))
+        count += 1
+        db.session.delete(address)
+    db.session.commit()
+    return count
+
+def delete_address_by_id(id):
+    this_address = db.session.query(Address).filter(Address.id == id).one_or_none()
+    if this_address is None:
+        return False
+    db.session.delete(this_address)
+    db.session.commit()
+    return True
+
+def store_response_file(zpid):
+    # request from GetUpdatedPropertyDetails API
+    parameters = {'zws-id': ZillowAPI.zwsid, 'zpid': zpid}
+    response = requests.get("https://www.zillow.com/webservice/GetUpdatedPropertyDetails.htm", params=parameters)
+    xmlOfRoot = xml.dom.minidom.parseString(response.content)
+    prettyXml = xmlOfRoot.toprettyxml()
+
+    filename = str(zpid) + '.xml'
+    file = open(filename, 'w+')
+    file.write(prettyXml)
+    file.close()
+    return 'File written as %s' % filename
