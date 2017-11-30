@@ -1,0 +1,91 @@
+body {
+    margin: 0;
+    font-family: "Verdana"; 
+}
+
+ul.topnav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+ul.topnav li {
+	float: left;
+}
+
+ul.topnav li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+ul.topnav li a:hover:not(.active) {background-color: #111;}
+
+ul.topnav li a.active {background-color: #4CAF50;}
+
+ul.topnav li.right {float: right;}
+
+.filter {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    position:fixed;
+    width: 25%;
+    background-color: #f1f1f1;
+    height: 100%;
+    overflow: auto;
+}
+
+table {
+	border-collapse: collapse; 
+	margin: auto;
+	padding: 30px;
+}
+	
+tr {
+	padding-top: 10px; 
+	padding-bottom: 10px; 
+	padding-left: 4px; 
+	padding-right: 4px;
+}
+
+#location {
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 150px;
+  font-size: 16px;
+  padding: 12px 18px 12px 18px;
+  border: 2px solid #ddd;
+  margin-bottom: 12px;
+}
+
+.scroll {
+	margin-left:28%; 
+	height:1000px;
+}
+
+.card {
+	float: left; 
+	max-width: 245px;
+	padding: 30px; 
+	margin: 10px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+	text-align: center;
+}
+
+img {
+    page-break-inside: avoid;
+    vertical-align: middle;
+    border-radius: calc(0.25rem - 1px);
+}
+
+.card-cut {
+	width:220px;
+	height:200px;
+	border-top-right-radius: calc(0.25rem - 1px);
+	border-top-left-radius: calc(0.25rem - 1px);
+}

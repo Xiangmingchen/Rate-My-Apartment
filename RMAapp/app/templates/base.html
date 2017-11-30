@@ -1,49 +1,22 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <!--logic control statement are put inside curly braces and percentage-->
-    {% if title %}
-    <!-- things inside double curly braces are variables that are passed in when called -->
-    <title>{{ title }}</title>
-    {% else %}
-    <title>Rate My Apartment</title>
-    {% endif %}
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-  </head>
-  <body>
-    <!-- Navigation bar -->
-    <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
-      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <a class="navbar-brand" href="#">RateMyApartment</a>
-
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Rating</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Apartment</a>
-          </li>
-        </ul>
-        <form class="form-inline my-2 my-lg-0">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Log in</button>
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Sign in</button>
-        </form>
-      </div>
-    </nav>
-
-    <div class="container">
+<html lang="en" class="no-js">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="{{ url_for('static', filename='now.css') }}">
+	<title>Rate My Apartment</title>
+</head>
 
 
-    <!--block control statement to define the place where the derived templates can insert themselves-->
+<body>
+
+	<ul class="topnav">
+		<li><a class="active" href="{{ url_for('homepage') }}">Rate My Apartment</a></li>
+		<li class="right"><a href="#about">Log In</a></li>
+		<li class="right"><a href="#about">Sign Up</a></li>
+	</ul>
+
     {% block content %}
     {% endblock %}
-  </body>
+
+</body>
 </html>
