@@ -7,20 +7,17 @@
 .bgimg-1 {
 	background-position: center;
     background-size: cover;
-    background-image: url("{{ url_for('static', filename='image/back.png') }}");
-    min-height: 100%;
-}
-.w3-bar .w3-button {
-    padding: 16px;
+	min-height: 100%;
+	background-image:url({{ url_for('static', filename='images/back.png') }});
 }
 </style>
 
 <header class="bgimg-1 w3-display-container w3-grayscale-min" id="home">
 	<div class="w3-display-left w3-text-white" style="padding:48px">
 		<span class="w3-jumbo w3-hide-small"><b>Rate My Apartment</b></span><br>
-		<form method="POST" class="w3-input w3-white w3-padding-large w3-large w3-margin-top w3-opacity w3-hover-opacity-off" style="width:220px">
+		<form method="POST" class="" style="width:220px">
 				{{ form.csrf_token }}
-				{{ form.search(class="form-control mr-sm-2", placeholder="", size=30) }}
+				{{ form.search(class="w3-input w3-white w3-padding-large w3-large w3-margin-top w3-opacity w3-hover-opacity-off", placeholder="", size=30) }}
 		</form>
 	</div> 
 	<div class="w3-display-bottomleft w3-text-white w3-large" style="padding:24px 48px">
