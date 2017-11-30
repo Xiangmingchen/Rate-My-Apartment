@@ -1,22 +1,37 @@
 <!DOCTYPE html>
-<html lang="en" class="no-js">
-<head>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="{{ url_for('static', filename='now.css') }}">
-	<title>Rate My Apartment</title>
-</head>
+<!DOCTYPE html>
+<html>
+<title>Rate My Apartment</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+<style>
+body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
+body, html {
+	height: 100%;
+	line-height: 1.8;
+}
+</style>
 
 <body>
+<!-- Navbar (sit on top) -->
+<div class="w3-top">
+	<div class="w3-bar w3-white w3-card" id="myNavbar">
+		<a href="#home" class="w3-bar-item w3-button">Rate My Apartment</a>
+		<!-- Right-sided navbar links -->
+		<div class="w3-right w3-hide-small">
+			<a href="{{ url_for('homepage') }}" class="w3-bar-item w3-button">Home</a>
+			<a href="Login" class="w3-bar-item w3-button"><i class="fa fa-user"></i>  Log In</a>
+			<a href="Sign Up" class="w3-bar-item w3-button"><i class="fa fa-user-plus"></i>  Sign Up</a>
+		</div>
+	</div>
+</div>
 
-	<ul class="topnav">
-		<li><a class="active" href="{{ url_for('homepage') }}">Rate My Apartment</a></li>
-		<li class="right"><a href="#about">Log In</a></li>
-		<li class="right"><a href="#about">Sign Up</a></li>
-	</ul>
-
-    {% block content %}
-    {% endblock %}
+{% block content %}
+{% endblock %}
 
 </body>
 </html>
