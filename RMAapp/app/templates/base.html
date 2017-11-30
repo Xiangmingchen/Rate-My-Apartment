@@ -20,10 +20,9 @@ body, html {
 <!-- Navbar (sit on top) -->
 <div class="w3-top">
 	<div class="w3-bar w3-white w3-card" id="myNavbar">
-		<a href="#home" class="w3-bar-item w3-button">Rate My Apartment</a>
+		<a href="{{ url_for('homepage') }}" class="w3-bar-item w3-button">Rate My Apartment</a>
 		<!-- Right-sided navbar links -->
 		<div class="w3-right w3-hide-small">
-			<a href="{{ url_for('homepage') }}" class="w3-bar-item w3-button">Home</a>
 			<a href="Login" class="w3-bar-item w3-button"><i class="fa fa-user"></i>  Log In</a>
 			<a href="Sign Up" class="w3-bar-item w3-button"><i class="fa fa-user-plus"></i>  Sign Up</a>
 		</div>
