@@ -5,9 +5,10 @@
 </head>
 <body>
     <form methods='POST' actions="/">
-        {{ from.csrf_token }}
         {{ render_field(form.username) }}
-        {{ render_field(form.comment) }}
+        {{ render_field(form.subject) }}
+        {{ render_field(form.review) }}
+        {{ render_field(form.submit) }}
         <input type="submit" value="Review">
     </form>
 </body>
