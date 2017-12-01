@@ -1,119 +1,127 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-  </head>
+<div class="w3-main w3-white w3-padding" style="max-width:1400px;margin-top:40px">
 
-    <div id="carouselExampleControls" class="carousel slide container" data-ride="carousel">
-      <div class="carousel-inner" role="listbox">
-        {% for i in range(len(apartment.image)): %}
-          <div class="carousel-item{% if i == 0: %} active {% endif %}">
-            <img class="d-block img-fluid" src="{{ apartment.image[i].url }}" alt="Apartment image" style="width:100%;">
+  <div class="w3-container">
+    <h2 class="w3-text-blue-grey">The Apartment</h2>
+  </div>
+  
+  <div class="w3-container">
+    <div class="w3-half" style="padding-right:15px;padding-top:10px">
+      <div class="w3-container" id="apartment">
+        <div class="w3-display-container mySlides">
+            <img src="{{ apartment.image[0].url }}" style="width:100%;height:400px;margin-bottom:-6px; border:2px solid lightgrey">
           </div>
-        {% endfor %}
-      </div>
-      <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-      </a>
-      <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-      </a>
-    </div>
-    <!-- <p>&nbsp;</p> -->
-
-    <div class="bd-example container">
-      <nav id="navbar-example2" class="navbar navbar-light bg-faded">
-        <ul class="nav nav-pills">
-          <li class="nav-item"><a class="nav-link" href="#about">@about</a></li>
-          <li class="nav-item"><a class="nav-link" href="#Services">@Services</a></li>
-          <li class="nav-item"><a class="nav-link" href="#Contact">@Contact</a></li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle active" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-            <div class="dropdown-menu">
-              <a class="dropdown-item" href="#one">one</a>
-              <a class="dropdown-item active" href="#two">two</a>
-              <div role="separator" class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#three">three</a>
-            </div>
-          </li>
-        </ul>
-      </nav>
-      <div class="container">
-      <div data-spy="scroll" data-target="#navbar-example2" data-offset="0" class="scrollspy-example">
-        <h4 id="fat">@fat</h4>
-        <p>Ad leggings keytar, brunch id art party dolor labore. Pitchfork yr enim lo-fi before they sold out qui. Tumblr farm-to-table bicycle rights whatever. Anim keffiyeh carles cardigan. Velit seitan mcsweeney's photo booth 3 wolf moon irure. Cosby sweater lomo jean shorts, williamsburg hoodie minim qui you probably haven't heard of them et cardigan trust fund culpa biodiesel wes anderson aesthetic. Nihil tattooed accusamus, cred irony biodiesel keffiyeh artisan ullamco consequat.</p>
-        <p>&nbsp;</p>
-        <h4 id="mdo">@mdo</h4>
-        <p>Veniam marfa mustache skateboard, adipisicing fugiat velit pitchfork beard. Freegan beard aliqua cupidatat mcsweeney's vero. Cupidatat four loko nisi, ea helvetica nulla carles. Tattooed cosby sweater food truck, mcsweeney's quis non freegan vinyl. Lo-fi wes anderson +1 sartorial. Carles non aesthetic exercitation quis gentrify. Brooklyn adipisicing craft beer vice keytar deserunt.</p>
-        <p>&nbsp;</p>
-        <h4 id="one">one</h4>
-        <p>Occaecat commodo aliqua delectus. Fap craft beer deserunt skateboard ea. Lomo bicycle rights adipisicing banh mi, velit ea sunt next level locavore single-origin coffee in magna veniam. High life id vinyl, echo park consequat quis aliquip banh mi pitchfork. Vero VHS est adipisicing. Consectetur nisi DIY minim messenger bag. Cred ex in, sustainable delectus consectetur fanny pack iphone.</p>
-        <p>&nbsp;</p>
-        <h4 id="two">two</h4>
-        <p>In incididunt echo park, officia deserunt mcsweeney's proident master cleanse thundercats sapiente veniam. Excepteur VHS elit, proident shoreditch +1 biodiesel laborum craft beer. Single-origin coffee wayfarers irure four loko, cupidatat terry richardson master cleanse. Assumenda you probably haven't heard of them art party fanny pack, tattooed nulla cardigan tempor ad. Proident wolf nesciunt sartorial keffiyeh eu banh mi sustainable. Elit wolf voluptate, lo-fi ea portland before they sold out four loko. Locavore enim nostrud mlkshk brooklyn nesciunt.</p>
-        <p>&nbsp;</p>
-        <h4 id="three">three</h4>
-        <p>Ad leggings keytar, brunch id art party dolor labore. Pitchfork yr enim lo-fi before they sold out qui. Tumblr farm-to-table bicycle rights whatever. Anim keffiyeh carles cardigan. Velit seitan mcsweeney's photo booth 3 wolf moon irure. Cosby sweater lomo jean shorts, williamsburg hoodie minim qui you probably haven't heard of them et cardigan trust fund culpa biodiesel wes anderson aesthetic. Nihil tattooed accusamus, cred irony biodiesel keffiyeh artisan ullamco consequat.</p>
-        <p>Keytar twee blog, culpa messenger bag marfa whatever delectus food truck. Sapiente synth id assumenda. Locavore sed helvetica cliche irony, thundercats you probably haven't heard of them consequat hoodie gluten-free lo-fi fap aliquip. Labore elit placeat before they sold out, terry richardson proident brunch nesciunt quis cosby sweater pariatur keffiyeh ut helvetica artisan. Cardigan craft beer seitan readymade velit. VHS chambray laboris tempor veniam. Anim mollit minim commodo ullamco thundercats.
-        </p>
+          <div class="w3-display-container mySlides">
+            <img src="{{ apartment.image[1].url }}" style="width:100%;height:400px;margin-bottom:-6px; border:2px solid lightgrey">
+          </div>
+          <div class="w3-display-container mySlides">
+            <img src="{{ apartment.image[2].url }}" style="width:100%;height:400px;margin-bottom:-6px; border:2px solid lightgrey">
+          </div>
+        </div>
+        
+      <div class="w3-row-padding w3-section">
+        <div class="w3-col s4">
+          <img class="demo w3-opacity w3-hover-opacity-off" src="{{ apartment.image[0].url }}" style="width:100%;height:140px;border:2px solid lightgrey;cursor:pointer" onclick="currentDiv(1)">
+        </div>
+        <div class="w3-col s4">
+          <img class="demo w3-opacity w3-hover-opacity-off" src="{{ apartment.image[1].url }}" style="width:100%;height:140px;border:2px solid lightgrey;cursor:pointer" onclick="currentDiv(2)">
+        </div>
+        <div class="w3-col s4">
+          <img class="demo w3-opacity w3-hover-opacity-off" src="{{ apartment.image[2].url }}" style="width:100%;height:140px;border:2px solid lightgrey;cursor:pointer" onclick="currentDiv(3)">
+        </div>
       </div>
     </div>
+
+    <div class="w3-half">
+        <section id="google map" style="padding-top:10px">
+          <div id="googleMap" style="width:100%;height:558px;border:2px solid lightgrey;"></div>
+          <script>
+            function myMap() {
+              var mapProp= {
+                center:new google.maps.LatLng(40.101952, -88.227161),
+                zoom:15
+              };
+              var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+            }
+          </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnXrZADZPZ7w-KpKxaCKRsFGaTfMjDffY&callback=myMap"></script>
+        </section>
+      </div>
+
+  </div>
+    
+  <div class="w3-container">
+    <div class="w3-half" style="padding-left:18px;padding-right:32px">
+      <div style="border:1px solid lightgrey;padding:1">
+      <h5><strong>The space</strong></h5>
+        <div class="w3-row w3-medium">
+          <div class="w3-col s6">
+            <p><i class="fa fa-fw fa-bath"></i> Bathrooms: 2</p>
+          </div>
+          <div class="w3-col s6">
+            <p><i class="fa fa-fw fa-bed"></i> Bedrooms: 1</p>
+          </div>
+        </div>
+      <hr>
+          
+      <h5><strong>Amenities</strong></h5>
+        <div class="w3-row w3-medium">
+          <div class="w3-col s6">
+            <p><i class="fa fa-fw fa-shower"></i> Shower</p>
+            <p><i class="fa fa-fw fa-wifi"></i> WiFi</p>
+            <p><i class="fa fa-fw fa-tv"></i> TV</p>
+          </div>
+          <div class="w3-col s6">
+            <p><i class="fa fa-fw fa-cutlery"></i> Kitchen</p>
+            <p><i class="fa fa-fw fa-thermometer"></i> Heating</p>
+            <p><i class="fa fa-fw fa-wheelchair"></i> Accessible</p>
+          </div>
+        </div>
+      <hr>
+          
+      <h5><strong>Extra Info</strong></h5>
+        <p>xxx</p>
+        <p>We accept: <i class="fa fa-credit-card w3-large"></i> <i class="fa fa-cc-mastercard w3-large"></i> <i class="fa fa-cc-amex w3-large"></i> <i class="fa fa-cc-cc-visa w3-large"></i><i class="fa fa-cc-paypal w3-large"></i></p>
+      <hr>
+      
+      <h5><strong>Contact</strong></h5>
+        <i class="fa fa-map-marker" style="width:30px"></i> Chicago, US<br>
+        <i class="fa fa-phone" style="width:30px"></i> Phone: +00 151515<br>
+        <i class="fa fa-envelope" style="width:30px"> </i> Email: mail@mail.com<br>
     </div>
-    <p>&nbsp;</p>
-  <div class="container">
-    <section id="google map">
-      <div id="googleMap" style="width:100%;height:350px;"></div>
-      <script>
-        function myMap() {
-          var mapProp= {
-            center:new google.maps.LatLng(40.101952, -88.227161),
-            zoom:15
-          };
-          var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
-        }
-      </script>
-      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnXrZADZPZ7w-KpKxaCKRsFGaTfMjDffY&callback=myMap"></script>
-    </section>
   </div>
-  <p>&nbsp;</p>
+</div>
 
+<script>
+var slideIndex = 1;
+showDivs(slideIndex);
 
-  <div class="d-flex justify-content-start">
-    <div class="container form-group" class="w-75 p-3" style="width:50%">
-        <label for="comment">Comment:</label>
-        <textarea class="form-control" rows="5" id="comment"></textarea>
-        <form class="form-inline">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Submit</button>
-        </form>
-    </div>
-  </div>
-  <p>&nbsp;</p>
-  <p>&nbsp;</p>
-  <footer class="bd-footer text-muted bg-faded">
-  <div class="container">
-    <ul class="bd-footer-links">
-      <li><a href="https://github.com/twbs/bootstrap">GitHub</a></li>
-      <li><a href="https://twitter.com/getbootstrap">Twitter</a></li>
-      <li><a href="/examples/">Examples</a></li>
-      <li><a href="/about/history/">About</a></li>
-    </ul>
-    <p>Designed and built with all the love in the world by <a href="https://twitter.com/mdo" target="_blank">@mdo</a> and <a href="https://twitter.com/fat" target="_blank">@fat</a>. Maintained by the <a href="https://github.com/orgs/twbs/people">core team</a> with the help of <a href="https://github.com/twbs/bootstrap/graphs/contributors">our contributors</a>.</p>
-    <p>Currently v4.0.0-alpha.6. Code licensed <a rel="license" href="https://github.com/twbs/bootstrap/blob/master/LICENSE" target="_blank">MIT</a>, docs <a rel="license" href="https://creativecommons.org/licenses/by/3.0/" target="_blank">CC BY 3.0</a>.</p>
-  </div>
-</footer>
-<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+function plusDivs(n) {
+  showDivs(slideIndex += n);
+}
 
-  <script>window.jQuery || document.write('<script src="/assets/js/vendor/jquery.min.js"><\/script>')</script>
+function currentDiv(n) {
+  showDivs(slideIndex = n);
+}
 
+function showDivs(n) {
+  var i;
+  var x = document.getElementsByClassName("mySlides");
+  var dots = document.getElementsByClassName("demo");
+  if (n > x.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = x.length}
+  for (i = 0; i < x.length; i++) {
+     x[i].style.display = "none";
+  }
+  for (i = 0; i < dots.length; i++) {
+     dots[i].className = dots[i].className.replace(" w3-opacity-off", "");
+  }
+  x[slideIndex-1].style.display = "block";
+  dots[slideIndex-1].className += " w3-opacity-off";
+}
+</script>
 
 {% endblock %}
