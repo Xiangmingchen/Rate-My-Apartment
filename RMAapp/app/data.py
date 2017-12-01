@@ -20,8 +20,10 @@ def update_database():
 # This fuction will not request if the zpid has been center_requested before
 # input: zpid: the center zpid of the request
 # return: on success: number of new apartments added
-#         on failture: False
-# used helpe functions: create_new_apartment
+#         on failure: False
+# used helper functions:
+#       create_new_apartment()
+#       rent_handler()
 # possible errors:
 #   1. Comp error: when GetComps returns error
 #       handling: print error message to console, return False
@@ -59,8 +61,7 @@ def center_request(zpid):
 
 # Expand database by center requesting every zpid in database
 # return: total number of new added apartments
-# used helpter functions: center_request()
-# possible errors: none
+# used helper functions: center_request()
 def expand_database():
     zpid_list = db.session.query(Apartment.zpid).all()
     new_apart_count = 0
@@ -71,10 +72,7 @@ def expand_database():
 # Count how many rows are in the target table, same as number of entries in the database
 # input: table_name: lowercased table name
 # return: on success: number of rows in the table
-#         on failture: -1
-# possible errors:
-#   1. table doesn't exist:
-#       handling: return -1
+#         on failure: -1
 def count_rows(table_name):
     count = 0
     if table_name == 'apartment':
@@ -89,7 +87,127 @@ def count_rows(table_name):
         count = -1
     return count
 
-# 
+# Display all the rows of a table, both printed to console and return as a string
+# input: table_name: only 'apartment' or 'address' are valid
+# return: on success: a string representation of all the data in the specified data
+#         on failure: 'Invalid table name'
+def display_data(table_name):
+    if table_name == 'apartment':
+        apartments = db.session.query(Apartment).all()
+        display = '{:3} | {:10} | {:10} | {:10} | {:6} | {:10} | {:10}'.format \
+                 ('id', 'zpid', 'addressID', 'addressNum', 'rent', 'imgcount', 'imgNum')
+        for apart in apartments:
+            display = '\n'.join([display, '{:3} | {:10} | {:10} | {:10} | {:6} | {:10} | {:10}'.format \
+                     (apart.id, apart.zpid, apart.address[0].id, len(apart.address), apart.rentPerMonth if apart.rentPerMonth is not None else 'None', apart.image_count, len(apart.image))])
+    elif table_name == 'address':
+        addresses = db.session.query(Address).all()
+        display = '{:3} | {:30} | {:7} | {:10} | {:5} | {:3}'.format \
+                 ('id', 'street', 'zipcode', 'city', 'state', 'aID')
+        for address in addresses:
+            display = '\n'.join([display, '{:3} | {:30} | {:6} | {:10} | {:5} | {}'.format \
+                     (address.id, address.street, address.zipcode, address.city, address.state, address.apartment_id)])
+    else:
+        display = 'Invalid table name'
+    print('%s data' % table_name)
+    print(display)
+    return display
+
+# Request GetZestimate from zillow to for the address of a zpid
+# input: zpid: the zpid of the apartment
+# return: on success: a string representation of the address
+#         on failure: a string of error code
+def get_address(zpid):
+    # request through GetZestimate API
+    parameters = {'zws-id': ZillowAPI.zwsid, 'zpid': zpid, 'rentzestimate': True}
+    response = requests.get("https://www.zillow.com/webservice/GetZestimate.htm", params=parameters)
+    apart = fromstring(response.content)
+    if apart.find('.//code').text != '0':
+        return ('error code: ' + ' '
+              + apart.find('.//code').text)
+    else:
+        return (apart.find('.//address/street').text + ' '
+              + apart.find('.//address/city').text + ' '
+              + apart.find('.//address/state').text)
+
+# Add a new apartment to the database with address and zipcode
+# input:
+#   address: the address of the new apartment to add
+#   zipcode: the zipcode of the new apartment to add
+# used helper function:
+#       handle_error()
+#       rent_handler()
+# return: on success: True
+#         on failure: False
+# possible errors:
+#   1. apartment already exist:
+#       handling: print 'Apartment already exists, adding failed' to console, return False
+#   2. response is error:
+#       handling: passes apartment into handle_error(), which prints error message and more
+#                 return False
+def add_new_apartment(address, zipcode):
+    exist = db.session.query(Address).filter(Address.street == address).one_or_none()
+    if exist:
+        print('Apartment already exists, adding failed')
+        return False
+    # The following lines request a property info by address and zipcode
+    parameters = {'zws-id': ZillowAPI.zwsid, 'address': address, \
+                  'citystatezip': zipcode, 'rentzestimate': True}
+    response = requests.get("http://www.zillow.com/webservice/GetSearchResults.htm", params=parameters)
+    apart = fromstring(response.content)
+    if apart.find('.//code').text != '0':
+        handle_error(apart)
+        return False
+    else:
+        if create_new_apartment(int(apart.find('.//zpid').text), rent_handler(apart)):
+            return True
+
+# Delete address from the database if its apartment_id is None
+# print the deleted address id to the console
+# return: the number of addresses deleted
+def delete_extra_address():
+    count = 0
+    floating_addresses = db.session.query(Address).filter(Address.apartment_id == None).all()
+    for address in floating_addresses:
+        print('deleted address with id {}'.format(address.id))
+        count += 1
+        db.session.delete(address)
+    db.session.commit()
+    return count
+
+# Delete unwanted address by its id
+# input: id: the id of the address
+# return: if the address exists: True
+#         otherwise: False
+def delete_address_by_id(id):
+    this_address = db.session.query(Address).filter(Address.id == id).one_or_none()
+    if this_address is None:
+        return False
+    db.session.delete(this_address)
+    db.session.commit()
+    return True
+
+# Request GetUpdatedPropertyDetails and store the response
+# input: zpid: the zpid to request
+# return: a string specifying the name of new file is created
+def store_response_file(zpid):
+    # request from GetUpdatedPropertyDetails API
+    parameters = {'zws-id': ZillowAPI.zwsid, 'zpid': zpid}
+    response = requests.get("https://www.zillow.com/webservice/GetUpdatedPropertyDetails.htm", params=parameters)
+    xmlOfRoot = xml.dom.minidom.parseString(response.content)
+    prettyXml = xmlOfRoot.toprettyxml()
+
+    filename = str(zpid) + '.xml'
+    file = open(filename, 'w+')
+    file.write(prettyXml)
+    file.close()
+    return 'File written as %s' % filename
+
+## --------------- Internal Helper functions --------------------
+# Handle erros of GetUpdatedPropertyDetails response
+# print error messages to the console
+# or delete the apartment if the data is protected
+# input: apart: an ElementTree element object of the apartment
+# used helper function: delete_if_exist()
 def handle_error(apart):
     error_code = int(apart.find('.//code').text)
     if error_code < 10:
@@ -104,7 +222,16 @@ def handle_error(apart):
     else:
         print('Unexpected error: %i.' % error_code)
 
-
+# Request GetUpdatedPropertyDetails with zpid,
+# Create a new apartment from the response
+# Print zpid of the new apartment to console
+# inputs:
+#   Zpid: the zpid of the new apartment
+#   rent: the rentzestimate of the new apartment
+#         (info about rent is not available in GetUpdatedPropertyDetails)
+# used helper function: handle_error()
+# return: on success: True
+#         on failure: False
 def create_new_apartment(Zpid, rent):
     # request from GetUpdatedPropertyDetails API
     parameters = {'zws-id': ZillowAPI.zwsid, 'zpid': Zpid}
@@ -144,7 +271,13 @@ def create_new_apartment(Zpid, rent):
     print('Created new apartment <%i>' % Zpid)
     return True
 
-
+# Request GetUpdatedPropertyDetails
+# Update the apartment info of a existing apartment
+# Print the updated apartment zpid to console
+# inputs:
+#   old_apart: a database object of the apartment to be updated
+#   rent: the rentzestimate of this apartment
+# used helper function: handle_error()
 def update_apartment_info(old_apart, rent):
     is_updated = False
     # update the apartment rate if it changed
@@ -180,116 +313,27 @@ def update_apartment_info(old_apart, rent):
         # add longitude and latitude to the old apartments
         old_apart.address[0].longitude = float(new_apart.find('.//address/longitude').text)
         old_apart.address[0].latitude = float(new_apart.find('.//address/latitude').text)
-        print('Updated longitude <%s> latitude <%s> for apartment <%i>' % (new_apart.find('.//address/longitude').text, new_apart.find('.//address/latitude').text, old_apart.zpid))
     db.session.commit()
     if is_updated:
         print('Updated apartment info <%i>' % old_apart.zpid)
 
-
-
-
-
-def get_address(zpid):
-    # request through GetZestimate API
-    parameters = {'zws-id': ZillowAPI.zwsid, 'zpid': zpid, 'rentzestimate': True}
-    response = requests.get("https://www.zillow.com/webservice/GetZestimate.htm", params=parameters)
-    apart = fromstring(response.content)
-    if apart.find('.//code').text != '0':
-        return ('error code: ' + ' '
-              + apart.find('.//code').text)
-    else:
-        return (apart.find('.//address/street').text + ' '
-              + apart.find('.//address/city').text + ' '
-              + apart.find('.//address/state').text)
-
-
-
-
-
-
-
-
-def display_data(table_name):
-    if table_name == 'apartment':
-        apartments = db.session.query(Apartment).all()
-        display = '{:3} | {:10} | {:10} | {:10} | {:6} | {:10} | {:10}'.format \
-                 ('id', 'zpid', 'addressID', 'addressNum', 'rent', 'imgcount', 'imgNum')
-        for apart in apartments:
-            display = '\n'.join([display, '{:3} | {:10} | {:10} | {:10} | {:6} | {:10} | {:10}'.format \
-                     (apart.id, apart.zpid, apart.address[0].id, len(apart.address), apart.rentPerMonth if apart.rentPerMonth is not None else 'None', apart.image_count, len(apart.image))])
-    elif table_name == 'address':
-        addresses = db.session.query(Address).all()
-        display = '{:3} | {:30} | {:7} | {:10} | {:5} | {:3}'.format \
-                 ('id', 'street', 'zipcode', 'city', 'state', 'aID')
-        for address in addresses:
-            display = '\n'.join([display, '{:3} | {:30} | {:6} | {:10} | {:5} | {}'.format \
-                     (address.id, address.street, address.zipcode, address.city, address.state, address.apartment_id)])
-    else:
-        display = 'Invalid table name'
-    print('%s data' % table_name)
-    print(display)
-    return display
-
-
-def add_new_apartment(address, zipcode):
-    exist = db.session.query(Address).filter(Address.street == address).one_or_none()
-    if exist:
-        print('Apartment already exists, adding failed')
-        return False
-    # The following lines request a property info by address and zipcode
-    parameters = {'zws-id': ZillowAPI.zwsid, 'address': address, \
-      'citystatezip': zipcode, 'rentzestimate': True}
-    response = requests.get("http://www.zillow.com/webservice/GetSearchResults.htm", params=parameters)
-    apart = fromstring(response.content)
-    if apart.find('.//code').text != '0':
-        handle_error(apart)
-    else:
-        if create_new_apartment(int(apart.find('.//zpid').text), rent_handler(apart)):
-            return True
-    return False
-
+# Delete an apartment by zpid from database if it exists
+# Print the zpid of the deleted apartment to console
+# input: zpid: the zpid of the apartment to be deleted
 def delete_if_exist(zpid):
-    # delete the photos of this apartment
     exist_apart = db.session.query(Apartment).filter(Apartment.zpid == zpid).one_or_none()
     if exist_apart:
         print('Deleted apartment <%s> from database' % zpid)
         db.session.delete(exist_apart)
         db.session.commit()
 
+# Handle the fact that some apartments have rentzestimate while others don't
+# input: apart: the apartment element root 
+# return: if has rentzestimate: a float of the rent
+#         otherwise: None
 def rent_handler(apart):
     amount = apart.find('.//rentzestimate/amount')
     if amount:
         return float(amount.text)
     else:
         return None
-
-def delete_extra_address():
-    count = 0
-    floating_addresses = db.session.query(Address).filter(Address.apartment_id == None).all()
-    for address in floating_addresses:
-        print('deleted address with id {}'.format(address.id))
-        count += 1
-        db.session.delete(address)
-    db.session.commit()
-    return count
-
-def delete_address_by_id(id):
-    this_address = db.session.query(Address).filter(Address.id == id).one_or_none()
-    if this_address is None:
-        return False
-    db.session.delete(this_address)
-    db.session.commit()
-    return True
-
-def store_response_file(zpid):
-    # request from GetUpdatedPropertyDetails API
-    parameters = {'zws-id': ZillowAPI.zwsid, 'zpid': zpid}
-    response = requests.get("https://www.zillow.com/webservice/GetUpdatedPropertyDetails.htm", params=parameters)
-    xmlOfRoot = xml.dom.minidom.parseString(response.content)
-    prettyXml = xmlOfRoot.toprettyxml()
-
-    filename = str(zpid) + '.xml'
-    file = open(filename, 'w+')
-    file.write(prettyXml)
-    file.close()
-    return 'File written as %s' % filename
