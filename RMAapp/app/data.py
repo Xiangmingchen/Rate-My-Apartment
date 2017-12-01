@@ -6,22 +6,90 @@ from app import ZillowAPI, db
 from sqlalchemy import create_engine, func
 from app.models import Apartment, Address, Image, Review
 
-
+## --------------- Interface functions --------------------
+# Update the entire database
+# return: nothing
+# used helper functions: update_apartment_info()
+# possible erros: none
 def update_database():
     current_list = db.session.query(Apartment).all()
     for apartment in current_list:
         update_apartment_info(apartment, apartment.rentPerMonth)
 
-
-def delete_if_exist(zpid):
-    # delete the photos of this apartment
-    exist_apart = db.session.query(Apartment).filter(Apartment.zpid == zpid).one_or_none()
-    if exist_apart:
-        print('Deleted apartment <%s> from database' % zpid)
-        db.session.delete(exist_apart)
+# Request GetComps from Zillow based on zpid, add new apartments to the database
+# This fuction will not request if the zpid has been center_requested before
+# input: zpid: the center zpid of the request
+# return: on success: number of new apartments added
+#         on failture: False
+# used helpe functions: create_new_apartment
+# possible errors:
+#   1. Comp error: when GetComps returns error
+#       handling: print error message to console, return False
+def center_request(zpid):
+    # check whether this apartment has been a center of request
+    thisApart = db.session.query(Apartment).filter(Apartment.zpid == zpid[0]).one_or_none()
+    if thisApart is not None and not thisApart.comps:
+        return 0
+    # The following lines request 25 more property info with one known zpid
+    parameters = {'zws-id': ZillowAPI.zwsid, 'zpid': zpid, 'count': 25, 'rentzestimate': True}
+    response = requests.get("http://www.zillow.com/webservice/GetComps.htm", params=parameters)
+    root = fromstring(response.content)
+    # if there is an error, print an error message and return false
+    error_code = int(root.find('.//code').text)
+    if error_code != 0:
+        print('Comp error: %i, %s' % (error_code, root.find('./message/text').text))
+        thisApart.comps = False
         db.session.commit()
+        return False
+    # create a list of comparable apartments
+    compList = root.findall('.//properties/comparables/comp')
+    new_apart_count = 0
+    # Store the apartments info into database
+    for apart in compList:
+        thisApart = db.session.query(Apartment).filter(Apartment.zpid == zpid[0]).one_or_none()
+        if thisApart is None:  # if this apartment is not in our database, add it to database
+            if create_new_apartment(zpid, rent_handler(apart)):
+                new_apart_count += 1
+        # else: # otherwise update the info for this apartment
+        #     update_apartment_info(thisApart, float(apart.find('./rentzestimate/amount').text))
+        # compzpidlist.append(zpid)
+    thisApart.comps = False
+    db.session.commit()
+    return new_apart_count
 
+# Expand database by center requesting every zpid in database
+# return: total number of new added apartments
+# used helpter functions: center_request()
+# possible errors: none
+def expand_database():
+    zpid_list = db.session.query(Apartment.zpid).all()
+    new_apart_count = 0
+    for zpid in zpid_list:
+        new_apart_count += center_request(zpid)
+    return new_apart_count
 
+# Count how many rows are in the target table, same as number of entries in the database
+# input: table_name: lowercased table name
+# return: on success: number of rows in the table
+#         on failture: -1
+# possible errors:
+#   1. table doesn't exist:
+#       handling: return -1
+def count_rows(table_name):
+    count = 0
+    if table_name == 'apartment':
+        count = db.session.query(func.count(Apartment.id)).scalar()
+    elif table_name == 'address':
+        count = db.session.query(func.count(Address.id)).scalar()
+    elif table_name == 'image':
+        count = db.session.query(func.count(Image.id)).scalar()
+    elif table_name == 'review':
+        count = db.session.query(func.count(Review.id)).scalar()
+    else:
+        count = -1
+    return count
+
+# 
 def handle_error(apart):
     error_code = int(apart.find('.//code').text)
     if error_code < 10:
@@ -50,7 +118,7 @@ def create_new_apartment(Zpid, rent):
     # create a new address for this apartment
     new_address = Address(street=apart.find('.//address/street').text, \
                           zipcode=int(apart.find('.//address/zipcode').text), \
-                          city=apart.find('.//address/city').text, \
+                          city=apart.find('.//address/city').text.title(), \
                           state=apart.find('.//address/state').text, \
                           longitude=float(apart.find('.//address/longitude').text), \
                           latitude=float(apart.find('.//address/latitude').text))
@@ -118,37 +186,7 @@ def update_apartment_info(old_apart, rent):
         print('Updated apartment info <%i>' % old_apart.zpid)
 
 
-def center_request(zpid):
-    # check whether this apartment has been a center of request
-    thisApart = db.session.query(Apartment).filter(Apartment.zpid == zpid[0]).one_or_none()
-    if thisApart is not None and not thisApart.comps:
-        return 0
-    # The following lines request 25 more property info with one known zpid
-    parameters = {'zws-id': ZillowAPI.zwsid, 'zpid': zpid, 'count': 25, 'rentzestimate': True}
-    response = requests.get("http://www.zillow.com/webservice/GetComps.htm", params=parameters)
-    root = fromstring(response.content)
-    # if there is an error, print an error message and return false
-    error_code = int(root.find('.//code').text)
-    if error_code != 0:
-        print('Comp error: %i, %s' % (error_code, root.find('./message/text').text))
-        thisApart.comps = False
-        db.session.commit()
-        return False
-    # create a list of comparable apartments
-    compList = root.findall('.//properties/comparables/comp')
-    new_apart_count = 0
-    # Store the apartments info into database
-    for apart in compList:
-        thisApart = db.session.query(Apartment).filter(Apartment.zpid == zpid[0]).one_or_none()
-        if thisApart is None:  # if this apartment is not in our database, add it to database
-            if create_new_apartment(zpid, rent_handler(apart)):
-                new_apart_count += 1
-        # else: # otherwise update the info for this apartment
-        #     update_apartment_info(thisApart, float(apart.find('./rentzestimate/amount').text))
-        # compzpidlist.append(zpid)
-    thisApart.comps = False
-    db.session.commit()
-    return new_apart_count
+
 
 
 def get_address(zpid):
@@ -165,27 +203,10 @@ def get_address(zpid):
               + apart.find('.//address/state').text)
 
 
-def expand_database():
-    zpid_list = db.session.query(Apartment.zpid).all()
-    new_apart_count = 0
-    for zpid in zpid_list:
-        new_apart_count += center_request(zpid)
-    return new_apart_count
 
 
-def count_rows(table_name):
-    count = 0
-    if table_name == 'apartment':
-        count = db.session.query(func.count(Apartment.id)).scalar()
-    elif table_name == 'address':
-        count = db.session.query(func.count(Address.id)).scalar()
-    elif table_name == 'image':
-        count = db.session.query(func.count(Image.id)).scalar()
-    elif table_name == 'review':
-        count = db.session.query(func.count(Review.id)).scalar()
-    else:
-        count = -1
-    return count
+
+
 
 
 def display_data(table_name):
@@ -227,6 +248,13 @@ def add_new_apartment(address, zipcode):
             return True
     return False
 
+def delete_if_exist(zpid):
+    # delete the photos of this apartment
+    exist_apart = db.session.query(Apartment).filter(Apartment.zpid == zpid).one_or_none()
+    if exist_apart:
+        print('Deleted apartment <%s> from database' % zpid)
+        db.session.delete(exist_apart)
+        db.session.commit()
 
 def rent_handler(apart):
     amount = apart.find('.//rentzestimate/amount')
