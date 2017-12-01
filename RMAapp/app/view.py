@@ -104,4 +104,18 @@ def add_new_apartment(address, zipcode):
     else:
         return 'Apartment adding failed'
 
+@app.route('/database/delete_extra_address')
+def delete_extra_address():
+    count = data.delete_extra_address()
+    return 'Deleted %i address' % count
+
+@app.route('/database/delete_address/<int:id>')
+def delete_address(id):
+    success = data.delete_address_by_id(id)
+    return 'Address <id = %i> deletion %s' % (id, 'succeeded' if success else 'failed')
+
+@app.route('/database/store_response/<int:zpid>')
+def store_response(zpid):
+    return data.store_response_file(zpid)
+
 app.secret_key = 'CS196'

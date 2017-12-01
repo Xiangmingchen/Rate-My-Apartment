@@ -4,8 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+
 flask = "*"
 "flask-wtf" = "*"
+pip = "*"
+"flask-migrate" = "*"
 
 
 

@@ -1,0 +1,18 @@
+# pipfiles for pipenv
+Pipfile
+Pipfile.lock
+
+# API key
+app/ZillowAPI.py
+
+# the pycache's
+__pycache__/
+app/__pycache__/
+
+# the DS_Stores
+.DS_Store
+app/.DS_Store
+app/templates/.DS_Store
+
+# the file sophia emailed me
+app/templates/home2.html
