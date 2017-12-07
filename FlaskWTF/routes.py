@@ -1,23 +1,24 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template  # request, redirect
 from flask_wtf import Form
-from wtforms import StringField, TextAreaField, SubmitField
-from wtforms.validators import DataRequired
+from wtforms import StringField, TextAreaField
+from wtforms.validators import InputRequired
+
+
 app = Flask(__name__)
-app.secret_key = 'CS196'  # do we need this?
+app.config['SECRET_KEY'] = 'CS196'
 
 
 class ContactForm(Form):
-    name = StringField('username', validators=[DataRequired()])
-    subject = TextAreaField("subject", validators=[DataRequired()])
-    reviews = TextAreaField('reviews', validators=[DataRequired()])
-    submit = SubmitField("submit", validators=[DataRequired()])
+    name = StringField('Username', validators=[InputRequired()])
+    subject = TextAreaField("Subject", validators=[InputRequired()])
+    reviews = TextAreaField('Review', validators=[InputRequired()])
 
 
-@app.route('/', methods=('GET', 'POST'))
+@app.route('/', methods=['GET', 'POST'])
 def submit():
     form = ContactForm()
-    if form.validate_on_submit():  # meaning if form is submitted successfully.
-        return "Thank you for posting the review!"  # or redirect('/success')
+    if form.validate_on_submit():
+        return 'Thank you for posting the review!'
     return render_template('form.html', form=form)
 
 
@@ -25,6 +26,7 @@ if __name__ == '__main__':
     app.run(debug=True)
 
 
+# unused codes below:
 # @app.route('/send', methods=['GET', 'POST'])
 # def send():
 #
