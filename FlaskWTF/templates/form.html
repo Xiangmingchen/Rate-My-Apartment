@@ -7,6 +7,7 @@
     <h3>Post Your Review!</h3>
     <form method='POST' action="/">
         <dl>
+        {{ form.csrf_token }}
 	    {{ render_field(form.name) }}
         <p></p>
 	    {{ render_field(form.subject) }}
