@@ -10,7 +10,7 @@ app.secret_key = 'CS196'
 
 @app.route('/form', methods=['GET', 'POST'])
 def review():
-    form = ContactForm()
+    form = ContactForm()  # why is this not working?
 
     if request.method == 'POST':
         return "Review Posted."
@@ -19,4 +19,4 @@ def review():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=80, debug=True)
