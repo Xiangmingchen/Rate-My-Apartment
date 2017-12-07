@@ -4,7 +4,7 @@ import xml.dom.minidom
 from lxml import html, etree
 from app import ZillowAPI, db
 from sqlalchemy import create_engine, func
-from app.models import Apartment, Address, Image, Review
+from app.models import Apartment, Address, Image, Review, Details, Rooms, Amentities
 
 ## --------------- Interface functions --------------------
 # Update the entire database
@@ -83,6 +83,12 @@ def count_rows(table_name):
         count = db.session.query(func.count(Image.id)).scalar()
     elif table_name == 'review':
         count = db.session.query(func.count(Review.id)).scalar()
+    elif table_name == 'details':
+        count = db.session.query(func.count(Details.id)).scalar()
+    elif table_name == 'rooms':
+        count = db.session.query(func.count(Rooms.id)).scalar()
+    elif table_name == 'amentities':
+        count = db.session.query(func.count(Amentities.id)).scalar()
     else:
         count = -1
     return count
@@ -106,6 +112,14 @@ def display_data(table_name):
         for address in addresses:
             display = '\n'.join([display, '{:3} | {:30} | {:6} | {:10} | {:5} | {}'.format \
                      (address.id, address.street, address.zipcode, address.city, address.state, address.apartment_id)])
+    elif table_name == 'details':
+        details = db.session.query(Details).all()
+        display = '{:3} | {:3} | {:4} | {:8} | {:6} | {:20}'.format \
+                 ('id', 'bed', 'bath', 'year_up', 'num_fl', 'parking type')
+        for detail in details:
+            display = '\n'.join([display, '{:3} | {:3} | {:4} | {:8} | {:6} | {}'.format \
+                     (detail.id, detail.bedrooms if detail.bedrooms else 'None', detail.bathrooms if detail.bathrooms else 'None', detail.year_update if detail.year_update else 'None', \
+                     detail.num_floor if detail.num_floor else 'None', detail.parking_type if detail.parking_type else 'None')])
     else:
         display = 'Invalid table name'
     print('%s data' % table_name)
@@ -258,13 +272,47 @@ def create_new_apartment(Zpid, rent):
 
     image_count = len(images_list)
 
+    # adding details to the apartment
+    facts_root = new_apart.find('.//editedFacts')
+    bedrooms = int(facts_root.find('./bedrooms').text) if facts_root.find('./bedrooms') != None else None
+    bathrooms = float(facts_root.find('./bathrooms').text) if facts_root.find('./bathrooms') != None else None
+    area = int(facts_root.find('./finishedSqFt').text) if facts_root.find('./finishedSqFt') != None else None
+    lot_area = int(facts_root.find('./lotSizeSqFt').text) if facts_root.find('./lotSizeSqFt') != None else None
+    year_built = int(facts_root.find('./yearBuilt').text) if facts_root.find('./yearBuilt') != None else None
+    year_update = int(facts_root.find('./yearUpdated').text) if facts_root.find('./yearUpdated') != None else None
+    num_floor = int(facts_root.find('./numFloors').text) if facts_root.find('./numFloors') != None else None
+    basement = facts_root.find('./basement').text if facts_root.find('./basement') != None else None
+    view = facts_root.find('./view').text if facts_root.find('./view') != None else None
+    parking_type = facts_root.find('./parkingType').text if facts_root.find('./parkingType') != None else None
+    heating_source = facts_root.find('./heatingSources').text if facts_root.find('./heatingSources') != None else None
+    heating_system = facts_root.find('./heatingSystem').text if facts_root.find('./heatingSystem') != None else None
+
+    details = Details(bedrooms=bedrooms, bathrooms=bathrooms, area=area, lot_area=lot_area, \
+                year_built=year_built, year_update=year_update, num_floor=num_floor, \
+                basement=basement, view=view, parking_type=parking_type, heating_source=heating_source, heating_system=heating_system)
+    # add rooms
+    rooms = []
+    room_list = facts_root.find('./rooms').text.split(', ') if facts_root.find('./rooms') != None else []
+    for name in room_list:
+        rooms.append(Rooms(name=name))
+    # add amentities
+    amentities = []
+    amentity_list = facts_root.find('./appliances').text.split(', ') if facts_root.find('./appliances') != None else []
+    for name in amentity_list:
+        amentities.append(Amentities(name=name))
+
+
     # create a new apartment for this apartment
     new_apartment = Apartment(zpid=Zpid, \
                               rentPerMonth=rent, \
                               address=[new_address], \
                               image=images_list, \
                               image_count=image_count,\
-                              comps=True)
+                              comps=True,\
+                              details=[details],\
+                              rooms=rooms,\
+                              amentities=amentities)
+
     # Add this new apartment to our database
     db.session.add(new_apartment)
     db.session.commit()
@@ -309,10 +357,6 @@ def update_apartment_info(old_apart, rent):
     image_count = len(image_list)
     old_apart.image_count = image_count
     old_apart.image = image_list
-    if old_apart.address[0].longitude is None:
-        # add longitude and latitude to the old apartments
-        old_apart.address[0].longitude = float(new_apart.find('.//address/longitude').text)
-        old_apart.address[0].latitude = float(new_apart.find('.//address/latitude').text)
     db.session.commit()
     if is_updated:
         print('Updated apartment info <%i>' % old_apart.zpid)
@@ -328,7 +372,7 @@ def delete_if_exist(zpid):
         db.session.commit()
 
 # Handle the fact that some apartments have rentzestimate while others don't
-# input: apart: the apartment element root 
+# input: apart: the apartment element root
 # return: if has rentzestimate: a float of the rent
 #         otherwise: None
 def rent_handler(apart):
