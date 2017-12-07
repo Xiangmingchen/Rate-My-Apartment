@@ -4,24 +4,18 @@
 
 <style>
 .card {
-	float: left; 
-	max-width:245px;
+	width:230px;
 	height:280px;
-	padding:17px; 
+	float:left;
+	padding:15px; 
 	margin:10px;
 }
 
 img {
+	width:100%;
+	height:65%;
     page-break-inside:avoid;
-    vertical-align:middle;
     border-radius:calc(0.25rem - 1px);
-}
-
-.card-cut {
-	width:200px;
-	height:150px;
-	border-top-right-radius:calc(0.25rem - 1px);
-	border-top-left-radius:calc(0.25rem - 1px);
 }
 </style>
 
@@ -40,15 +34,15 @@ img {
     </div>
 </div>
 
-<div class="w3-threequarter w3-grayscale-min" style="text-align:center;">
+<div class="w3-threequarter w3-grayscale-min" style="text-align: center;">
 	{% set count = [0] %}
 		{% for j in range(length): %}
-		<div class="card w3-card">
+		<div class="card m1 l1 w3-card">
 			<a href="{{ url_for('reviewpage', zpid=apartments[count[0]].zpid) }}">
 				{% if len(apartments[count[0]].image) != 0: %}
-    	    <img class="card-cut" src="{{apartments[count[0]].image[0].url}}">
+    	    	<img src="{{apartments[count[0]].image[0].url}}">
 				{% else: %}
-					<img class="card-cut" src="{{ url_for('static', filename='images/Noimage.png') }}">
+				<img src="{{ url_for('static', filename='images/Noimage.png') }}">
 				{% endif %}
 			</a>
 			<p style="padding-top:10px">{{apartments[count[0]].address[0].street}}<br>${{apartments[count[0]].rentPerMonth}} &#47; month</p>
