@@ -1,0 +1,11 @@
+# pycache
+__pycache__
+
+# pipenv
+Pipfile
+
+# API key
+ZillowAPI.py
+
+# atom idea
+.idea
