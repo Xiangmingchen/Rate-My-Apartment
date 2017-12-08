@@ -1,0 +1,35 @@
+{% from "_formhelpers.html" import render_field %}
+<html>
+<head>
+    <title>Review Submission</title>
+</head>
+<body>
+    <h3>Post Your Review!</h3>
+    <form method='POST' action="/">
+        <dl>
+        {{ form.csrf_token }}
+	    {{ render_field(form.name) }}
+        <p></p>
+	    {{ render_field(form.subject) }}
+        <p></p>
+        {{ render_field(form.reviews) }}
+        <p></p>
+	    <input type="submit" value="Submit">
+	    </dl>
+    </form>
+</body>
+</html>
+
+<!--
+        <div class="form-group">
+            <input type="text" placeholder="Name" name="name" tabindex="1" required>
+        </div>
+        <div>
+            <textarea rows="1" cols="100" placeholder="Title of Review" name="subject" tabindex="3" required></textarea>
+        </div>
+        <div>
+            <textarea rows="5" cols="100" placeholder="Type your Review Here :- )" name="reviews" tabindex="4" required></textarea>
+        </div>
+        <div>
+        <input class ="btn btn-primary" type="submit" value="submit">
+-->
