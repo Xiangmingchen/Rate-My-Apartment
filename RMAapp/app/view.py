@@ -64,10 +64,8 @@ def center_request(zpid):
         return 'Request failed'
     return 'Request succeeded'
 
-@app.route('/database/<int:zpid>')
+@app.route('/database/query_address/<int:zpid>')
 def database(zpid):
-
-    # Dispay the apartments with pictures first
     apartment = db.session.query(Apartment) \
                         .filter(Apartment.zpid == zpid).one_or_none()
     if apartment:

@@ -1,33 +1,4 @@
-body {
-    margin: 0;
-    font-family: "Verdana"; 
-}
 
-ul.topnav {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #333;
-}
-
-ul.topnav li {
-	float: left;
-}
-
-ul.topnav li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-
-ul.topnav li a:hover:not(.active) {background-color: #111;}
-
-ul.topnav li a.active {background-color: #4CAF50;}
-
-ul.topnav li.right {float: right;}
 
 .filter {
     list-style-type: none;
@@ -40,28 +11,6 @@ ul.topnav li.right {float: right;}
     overflow: auto;
 }
 
-table {
-	border-collapse: collapse; 
-	margin: auto;
-	padding: 30px;
-}
-	
-tr {
-	padding-top: 10px; 
-	padding-bottom: 10px; 
-	padding-left: 4px; 
-	padding-right: 4px;
-}
-
-#location {
-  background-position: 10px 10px;
-  background-repeat: no-repeat;
-  width: 150px;
-  font-size: 16px;
-  padding: 12px 18px 12px 18px;
-  border: 2px solid #ddd;
-  margin-bottom: 12px;
-}
 
 .scroll {
 	margin-left:28%; 

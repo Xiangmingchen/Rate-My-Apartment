@@ -1,0 +1,50 @@
+<?xml version="1.0" ?>
+<UpdatedPropertyDetails:updatedPropertyDetails xmlns:UpdatedPropertyDetails="http://www.zillow.com/static/xsd/UpdatedPropertyDetails.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.zillow.com/static/xsd/UpdatedPropertyDetails.xsd https://www.zillowstatic.com/vstatic/6ce354c/static/xsd/UpdatedPropertyDetails.xsd">
+	<request>
+		<zpid>3238686</zpid>
+	</request>
+	<message>
+		<text>Request successfully processed</text>
+		<code>0</code>
+	</message>
+	<response>
+		<zpid>3238686</zpid>
+		<pageViewCount>
+			<currentMonth>3802</currentMonth>
+			<total>3802</total>
+		</pageViewCount>
+		<address>
+			<street>604 W California Ave</street>
+			<zipcode>61801</zipcode>
+			<city>Urbana</city>
+			<state>IL</state>
+			<latitude>40.108539</latitude>
+			<longitude>-88.214813</longitude>
+		</address>
+		<links>
+			<homeDetails>https://www.zillow.com/homedetails/604-W-California-Ave-Urbana-IL-61801/3238686_zpid/</homeDetails>
+			<photoGallery>https://www.zillow.com/homedetails/604-W-California-Ave-Urbana-IL-61801/3238686_zpid/#image=lightbox%3Dtrue</photoGallery>
+			<homeInfo>https://www.zillow.com/homedetails/604-W-California-Ave-Urbana-IL-61801/3238686_zpid/</homeInfo>
+		</links>
+		<images>
+			<count>8</count>
+			<image>
+				<url>https://photos.zillowstatic.com/p_d/ISql1l2cpw152x1000000000.jpg</url>
+				<url>https://photos.zillowstatic.com/p_d/ISa1zk76htcjhx1000000000.jpg</url>
+				<url>https://photos.zillowstatic.com/p_d/ISuouw6t8dwohx1000000000.jpg</url>
+				<url>https://photos.zillowstatic.com/p_d/ISmiskom45orhx1000000000.jpg</url>
+				<url>https://photos.zillowstatic.com/p_d/ISecq86g0xfuhx1000000000.jpg</url>
+			</image>
+		</images>
+		<editedFacts>
+			<useCode>MultiFamily2To4</useCode>
+			<bedrooms>3</bedrooms>
+			<bathrooms>2.0</bathrooms>
+			<finishedSqFt>836</finishedSqFt>
+			<lotSizeSqFt>51</lotSizeSqFt>
+			<yearBuilt>1903</yearBuilt>
+		</editedFacts>
+		<homeDescription>Property is an over under duplex located in close proximity to the University of Illinois.  Upstairs unit has fresh paint, downstairs unit is in good repair with current tenant in place through mid-Aigust..</homeDescription>
+	</response>
+</UpdatedPropertyDetails:updatedPropertyDetails>
+<!-- H:006  T:288ms  S:694  R:Thu Nov 30 16:31:09 PST 2017  B:5.0.50267.8-hotfix_2017-11-28.3ecc3df~hotfix-platform-for-2017-11-28.4b0f42f -->

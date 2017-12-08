@@ -1,9 +1,0 @@
-# pipfile for pipenv
-Pipfile
-Pipfile.lock
-
-# API key
-ZillowAPI.py
-
-# pycache
-__pycache__
