@@ -300,8 +300,9 @@ def create_new_apartment(Zpid, rent):
     amentity_list = facts_root.find('./appliances').text.split(', ') if facts_root.find('./appliances') != None else []
     for name in amentity_list:
         amentities.append(Amentities(name=name))
-
-
+    # add description
+    description = new_apart.find('.//homeDescription')
+    old_apart.descripion = description.text if description != None else None
     # create a new apartment for this apartment
     new_apartment = Apartment(zpid=Zpid, \
                               rentPerMonth=rent, \
