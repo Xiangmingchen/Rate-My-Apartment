@@ -2,48 +2,31 @@
 
 {% block content %}
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-
-
 <style>
-section.test {
-    background-image:url({{ url_for('static', filename='images/back.jpg') }});
-    background-repeat:no-repeat;
-    background-size:cover;
-    padding-bottom:200px;
+.bgimg-1 {
+	background-position: center;
+    background-size: cover;
+	min-height: 100%;
+	background-image:url({{ url_for('static', filename='images/back.png') }});
 }
-
-h1 {
-	font-weight: 700;
-	text-shadow: 4px 4px 8px gray;
-	font-size:60px;
-    color:white;
-	padding-top:220px;
-	padding-bottom:30px;
-	text-align:center;
-}
-
-d-flex justify-content-center {
-	padding:100px;
-}
-
 </style>
 
-<section class="test">
-    <div class="container">
-    	<h1 class="jumbotron-heading">Rate My Apartment</h1>
-    		<p class="lead text-muted"></p>
-    	<div class="d-flex justify-content-center">
-    		<form class="form-inline" method="POST">
+<header class="bgimg-1 w3-display-container w3-grayscale-min" id="home">
+	<div class="w3-display-left w3-text-white" style="padding:48px">
+		<span class="w3-jumbo w3-hide-small"><b>Rate My Apartment</b></span><br>
+		<form method="POST" class="" style="width:240px">
 				{{ form.csrf_token }}
-				{{ form.search(class="form-control mr-sm-2", placeholder="Which city are you looking for?", size=30) }}
-        		<input class="btn btn-outline-success my-2 my-sm-3" type="submit" value="Search">
-    		</form>
-    	</div>
-    </div>
-</section>
-
-
-
+				{{ form.search(class="w3-input w3-white w3-padding-large w3-large w3-margin-top w3-opacity w3-hover-opacity-off", placeholder="Search City", size=30) }}
+		</form>
+	</div> 
+	<div class="w3-display-bottomleft w3-text-white w3-large" style="padding:24px 48px">
+		<i class="fa fa-facebook-official w3-hover-opacity"></i>
+		<i class="fa fa-instagram w3-hover-opacity"></i>
+		<i class="fa fa-snapchat w3-hover-opacity"></i>
+		<i class="fa fa-pinterest-p w3-hover-opacity"></i>
+		<i class="fa fa-twitter w3-hover-opacity"></i>
+		<i class="fa fa-linkedin w3-hover-opacity"></i>
+	</div>
+</header>
 
 {% endblock %}

@@ -2,39 +2,54 @@
 
 {% block content %}
 
-<div class="filter">
-	<table>
-	<col width="150">
-		<tr>
-		</tr>
-		<tr align="center">
-		<input type="text" id="location" onkeyup="locSearch()" placeholder="Search location">
+<style>
+.card {
+	width:230px;
+	height:280px;
+	float:left;
+	padding:15px; 
+	margin:10px;
+}
 
-		</tr>
-		<tr>
-		</tr>
-	</table>
+img {
+	width:100%;
+	height:65%;
+    page-break-inside:avoid;
+    border-radius:calc(0.25rem - 1px);
+}
+</style>
+
+<div class="w3-main w3-content w3-padding" style="max-width:1450px;margin-top:40px">
+
+<div class="w3-quarter" style="padding:12px;padding-top:11px">
+    <div class="w3-light-grey w3-display-container w3-card">
+        <div class="w3-container w3-display-container">
+            <hr>
+            <form action="/action_page.php" target="_blank">
+                <p><label><i class="fa fa-location-arrow"></i> Location</label></p>
+                <input class="w3-input w3-border" type="text" placeholder="" required>                  
+                <p><button class="w3-button w3-block w3-blue-grey w3-left-align" type="submit"><i class="fa fa-search w3-margin-right"></i> Search</button></p>
+            </form>
+        </div>
+    </div>
 </div>
 
-<div class="scroll">
+<div class="w3-threequarter w3-grayscale-min" style="text-align: center;">
 	{% set count = [0] %}
 		{% for j in range(length): %}
-		<div class="card">
-
-
+		<div class="card m1 l1 w3-card">
 			<a href="{{ url_for('reviewpage', zpid=apartments[count[0]].zpid) }}">
 				{% if len(apartments[count[0]].image) != 0: %}
-    	    <img class="card-cut" src="{{apartments[count[0]].image[0].url}}" class="card-cut" alt="Card">
+    	    	<img src="{{apartments[count[0]].image[0].url}}">
 				{% else: %}
-					<img class="card-cut" src="{{ url_for('static', filename='images/Noimage.png') }}" alt="Card">
+				<img src="{{ url_for('static', filename='images/Noimage.png') }}">
 				{% endif %}
 			</a>
-			<h5>{{apartments[count[0]].address[0].street}}</h5>
-			<h5>${{apartments[count[0]].rentPerMonth}} &#47; month</h5>
-
+			<p style="padding-top:10px">{{apartments[count[0]].address[0].street}}<br>${{apartments[count[0]].rentPerMonth}} &#47; month</p>
 		{% if count.append(count.pop() + 1) %}{% endif %}
 		</div>
 	 {% endfor %}
+</div>
 </div>
 
 {% endblock %}

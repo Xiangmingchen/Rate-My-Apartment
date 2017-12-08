@@ -64,10 +64,8 @@ def center_request(zpid):
         return 'Request failed'
     return 'Request succeeded'
 
-@app.route('/database/<int:zpid>')
+@app.route('/database/query_address/<int:zpid>')
 def database(zpid):
-
-    # Dispay the apartments with pictures first
     apartment = db.session.query(Apartment) \
                         .filter(Apartment.zpid == zpid).one_or_none()
     if apartment:
@@ -103,5 +101,19 @@ def add_new_apartment(address, zipcode):
         return 'Apartment added'
     else:
         return 'Apartment adding failed'
+
+@app.route('/database/delete_extra_address')
+def delete_extra_address():
+    count = data.delete_extra_address()
+    return 'Deleted %i address' % count
+
+@app.route('/database/delete_address/<int:id>')
+def delete_address(id):
+    success = data.delete_address_by_id(id)
+    return 'Address <id = %i> deletion %s' % (id, 'succeeded' if success else 'failed')
+
+@app.route('/database/store_response/<int:zpid>')
+def store_response(zpid):
+    return data.store_response_file(zpid)
 
 app.secret_key = 'CS196'
