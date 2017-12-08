@@ -14,6 +14,13 @@ def homepage():
     return render_template('home.html', form=form)
 
 
+<<<<<<< HEAD
+    for apartment in apartments:
+        if apartment.address[0].zipcode == centerZipcode:
+            localAp.append(apartment)
+    apartments = localAp
+
+=======
 @app.route('/filter/<search>')
 def filter(search=None):
 
@@ -35,6 +42,7 @@ def filter(search=None):
     def length(a):
         return len(a)
 
+>>>>>>> 258d7a8a1861021af03decd1ae6bf19187cf4567
     return render_template('index.html', title='Home', \
                             apartments=apartments, \
                             rows=math.ceil(len(apartments) / 3),\
