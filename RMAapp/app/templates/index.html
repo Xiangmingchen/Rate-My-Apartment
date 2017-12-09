@@ -4,7 +4,7 @@
 <style>
 .card {
 	width:230px;
-	height:280px;
+	height:310px;
 	float:left;
 	padding:15px;
 	margin:10px;
@@ -12,9 +12,17 @@
 
 img {
 	width:100%;
-	height:65%;
+	height:60%;
     page-break-inside:avoid;
     border-radius:calc(0.25rem - 1px);
+}
+
+.checked {
+    color: #4a6eb0;
+}
+
+.notchecked {
+  color:#bbb
 }
 </style>
 
@@ -53,6 +61,14 @@ img {
 					${{apartments[count[0]].rentPerMonth}} &#47; month
 				{% endif %}
 			</p>
+			<div style="margin-top:-13px">
+				<span class="fa fa-star checked"></span>
+				<span class="fa fa-star checked"></span>
+				<span class="fa fa-star checked"></span>
+				<span class="fa fa-star checked"></span>
+				<span class="fa fa-star notchecked"></span>
+				<span>(111 Reviews)</span>
+			</div>
 		{% if count.append(count.pop() + 1) %}{% endif %}
 		</div>
 	 {% endfor %}
