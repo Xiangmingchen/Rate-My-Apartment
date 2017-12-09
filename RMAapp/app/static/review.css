@@ -145,11 +145,11 @@ p {
 }
 
 /* Individual bars */
-.bar-5 {width: 60%; height: 18px; background-color: #4a6eb0;}
-.bar-4 {width: 30%; height: 18px; background-color: #6181bd;}
-.bar-3 {width: 10%; height: 18px; background-color: #7a95c7;}
-.bar-2 {width: 4%; height: 18px; background-color: #92a8d1;}
-.bar-1 {width: 15%; height: 18px; background-color: #a9badb;}
+.bar-5 {width: 60%; height: 20px; background-color: #4a6eb0;}
+.bar-4 {width: 30%; height: 20px; background-color: #6181bd;}
+.bar-3 {width: 10%; height: 20px; background-color: #7a95c7;}
+.bar-2 {width: 4%; height: 20px; background-color: #92a8d1;}
+.bar-1 {width: 15%; height: 20px; background-color: #a9badb;}
 
 /* Responsive layout - make the columns stack on top of each other instead of next to each other */
 @media (max-width: 400px) {
