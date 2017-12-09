@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
 <style>
 .card {
 	width:230px;
@@ -27,10 +26,10 @@ img {
             <hr>
             <form method="POST">
                 <p><label><i class="fa fa-location-arrow"></i> Location</label></p>
-								{{ form.csrf_token }}{{ form.search(class="w3-input w3-border", type="text", autocomplete="off") }}
+					{{ form.csrf_token }}{{ form.search(class="w3-input w3-border", type="text", autocomplete="off") }}
                 <p><button class="w3-button w3-block w3-blue-grey w3-left-align" type="submit">
-									<i class="fa fa-search w3-margin-right"></i> Search</button>
-								</p>
+					<i class="fa fa-search w3-margin-right"></i> Search</button>
+				</p>
             </form>
         </div>
     </div>

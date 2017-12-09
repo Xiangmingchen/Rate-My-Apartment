@@ -1,211 +1,38 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<<<<<<< HEAD
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link href="static/reviewpage.css" rel="stylesheet">
-=======
-<style>
-  body, html {
-	height: 100%;
-  line-height: 1.5;
-}
-p {
-  font-size: 17px;
-}
-
-* {box-sizing:border-box}
-.mySlides {display:none}
-
-/* Slideshow container */
-.slideshow-container {
-  max-width: 1000px;
-  position: relative;
-  margin: auto;
-}
-
-/* Next & previous buttons */
-.prev, .next {
-  cursor: pointer;
-  position: absolute;
-  top: 50%;
-  width: auto;
-  padding: 16px;
-  margin-top: -22px;
-  color: white;
-  font-weight: bold;
-  font-size: 35px;
-  transition: 0.6s ease;
-  border-radius: 0 3px 3px 0;
-}
-
-/* Position the "next button" to the right */
-.next {
-  right: 0;
-  border-radius: 3px 0 0 3px;
-}
-
-/* On hover, add a black background color with a little bit see-through */
-.prev:hover, .next:hover {
-  background-color: rgba(0,0,0,0.8);
-}
-
-/* Number text (1/3 etc) */
-.numbertext {
-  color: #f2f2f2;
-  font-size: 30px;
-  padding: 8px 16px;
-  position: absolute;
-  top: 0;
-  text-shadow: black 1px 0 10px; 
-}
-
-/* The dots/bullets/indicators */
-.dot {
-  cursor: pointer;
-  height: 15px;
-  width: 15px;
-  margin: 0 2px;
-  background-color: #bbb;
-  border-radius: 50%;
-  display: inline-block;
-  transition: background-color 0.6s ease;
-}
-
-.active, .dot:hover {
-  background-color: #717171;
-}
-
-/* Fading animation */
-.fade {
-  -webkit-animation-name: fade;
-  -webkit-animation-duration: 1s;
-  animation-name: fade;
-  animation-duration: 1s;
-}
-
-@-webkit-keyframes fade {
-  from {opacity: .4} 
-  to {opacity: 1}
-}
-
-@keyframes fade {
-  from {opacity: .4} 
-  to {opacity: 1}
-}
-
-/* On smaller screens, decrease text size */
-@media only screen and (max-width: 300px) {
-  .prev, .next,.text {font-size: 20px}
-}
-* {
-    box-sizing: border-box;
-}
-
-.heading {
-    font-size: 22px;
-    margin-right: 25px;
-}
-
-.fa {
-    font-size: 22px;
-}
-
-.checked {
-    color: #4a6eb0;
-}
-
-.notchecked {
-  color:#bbb
-}
-
-/* Three column layout */
-.side {
-    float: left;
-    width: 15%;
-    margin-top: 10px;
-}
-
-.middle {
-    float: left;
-    width: 70%;
-    margin-top: 10px;
-}
-
-/* Place text to the right */
-.right {
-    text-align: right;
-}
-
-/* Clear floats after the columns */
-.row:after {
-    content: "";
-    display: table;
-    clear: both;
-}
-
-/* The bar container */
-.bar-container {
-    width: 100%;
-    background-color: #f1f1f1;
-    text-align: center;
-    color: white;
-}
-
-/* Individual bars */
-.bar-5 {width: 60%; height: 18px; background-color: #4a6eb0;}
-.bar-4 {width: 30%; height: 18px; background-color: #6181bd;}
-.bar-3 {width: 10%; height: 18px; background-color: #7a95c7;}
-.bar-2 {width: 4%; height: 18px; background-color: #92a8d1;}
-.bar-1 {width: 15%; height: 18px; background-color: #a9badb;}
-
-/* Responsive layout - make the columns stack on top of each other instead of next to each other */
-@media (max-width: 400px) {
-    .side, .middle {
-        width: 100%;
-    }
-    /* Hide the right column on small screens */
-    .right {
-        display: none;
-    }
-}
-.details p {
-  text-indent: 25px;
-}
-</style>
->>>>>>> 1e9d5ee6c38d7102978ab7b0ec96eccfa20b08ff
-
+<link rel="stylesheet" href="{{ url_for('static', filename='review.css') }}">
 <div class="w3-main w3-white w3-content w3-padding" style="max-width:1450px;margin-top:40px">
-    <div class="w3-container" style="margin-left:18px">
+    <div class="w3-container">
       <h2 style="color:#4a6eb0"><strong>{{ apartment.address[0].street }}</strong></h2>
-      <p>${{apartment.rentPerMonth}} &#47; month</p>
+      <p>	{% if apartment.rentPerMonth == None: %}
+      			Unknown Rate
+      		{% else: %}
+      			${{apartment.rentPerMonth}} &#47; month
+      		{% endif %}</p>
     </div>
 
-    <div class="w3-container">
       <div class="w3-half" style="padding:10px">
-          <div class="slideshow-container w3-card">
-            {% for j in range(len(apartment.image)): %}
-            <div class="mySlides fade">
-              <div class="numbertext"><strong>{{ j + 1 }} / {{ len(apartment.image) }}</strong></div>
-              <img src="{{ apartment.image[j].url }}" style="width:100%;max-height:500px">
-            </div>
-            {% endfor %}
-
-            <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-            <a class="next" onclick="plusSlides(1)">&#10095;</a>
-
+        <div class="slideshow-container w3-card">
+          {% for j in range(len(apartment.image)): %}
+          <div class="mySlides fade">
+            <div class="numbertext"><strong>{{ j + 1 }} / {{ len(apartment.image) }}</strong></div>
+            <img src="{{ apartment.image[j].url }}" style="width:100%;max-height:500px">
+          </div>
+          {% endfor %}
+          <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+          <a class="next" onclick="plusSlides(1)">&#10095;</a>
         </div>
         <br>
-
         <div style="text-align:center">
           {% for q in range(len(apartment.image)): %}
           <span class="dot" onclick="currentSlide(q + 1)"></span>
           {% endfor %}
         </div>
 
-        <div class="w3-card" style="margin-top:25px;padding:10px;padding-left:20px;padding-right:20px">
+        <div class="w3-card w3-round" style="margin-top:25px;padding:10px;padding-left:20px;padding-right:20px">
 					<!-- Rooms -->
-					<h5><strong>Rooms</strong></h5>
+					<h4><strong>Rooms</strong></h4>
           <div class="w3-row w3-medium">
             <div class="w3-col s6">
               <p><i class="fa fa-fw fa-bath"></i> Bathrooms:
@@ -217,49 +44,48 @@ p {
               <p><i class="fa fa-fw fa-bed"></i> Bedrooms:
 									{% if apartment.details[0].bedrooms != None: %}
 										{{ apartment.details[0].bedrooms }}
-									{% else: %} Unknown {% endif %}</p>
+                  {% else: %} Unknown {% endif %}</p>
             </div>
-						{% if len(apartment.rooms) > 0: %}
-		          <div class="w3-row">
-								{% for i in range(len(apartment.rooms)): %}
-			            <div class="w3-half">
-			              <p><i class="fa fa-fw fa-circle-o"></i> {{ apartment.rooms[i].name }}</p>
-									</div>
-								{% endfor %}
-		          </div>
-						{% endif %}
           </div>
-<<<<<<< HEAD
-=======
-              
->>>>>>> 1e9d5ee6c38d7102978ab7b0ec96eccfa20b08ff
+
+          {% if len(apartment.rooms) > 0: %}
+          <div class="w3-row w3-medium">
+            {% for i in range(len(apartment.rooms)): %}
+              <div class="w3-half">
+                <p><i class="fa fa-fw fa-circle-o"></i> {{ apartment.rooms[i].name }}</p>
+              </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+
 					<!-- Amentities -->
-					{% if len(apartment.amentities) > 0: %}
-					<hr style="margin:12px">
-	          <h5><strong>Amenities</strong></h5>
-	          <div class="w3-row">
+          {% if len(apartment.amentities) > 0: %}
+          <hr style="margin:22px">
+          <h4><strong>Amenities</strong></h4>
+	          <div class="w3-row w3-medium">
 							{% for i in range(len(apartment.amentities)): %}
-		            <div class="w3-half">
-		              <p><i class="fa fa-fw">•</i>{{ apartment.amentities[i].name }}</p>
+		            <div class="w3-col s6">
+		              <p><i class="fa fa-fw fa-circle w3-medium"></i> {{ apartment.amentities[i].name }}</p>
 								</div>
 							{% endfor %}
 	          </div>
-					{% endif %}
-              
+          {% endif %}
+
 					<!-- Description -->
-					{% if apartment.descripion != None: %}
-					<hr style="margin:12px">
-          <h5><strong>Description</strong></h5>
+          {% if apartment.descripion != None: %}
+          <hr style="margin:22px">
+          <h4><strong>Description</strong></h4>
 					<div class="details" style="padding:0 10px">
 						 <p>{{ apartment.descripion }}</p>
 					</div>
 					{% endif %}
         </div>
 
-        <section id="google map" class="w3-card w3-margin-top">
+        <section id="google map" class="w3-card w3-round w3-margin-top">
           <div id="googleMap" style="width:100%;height:400px;border:2px solid lightgrey;"></div>
         </section>
       </div>
+
       <div class="w3-half" style="padding:10px">
           <div class="w3-container w3-card w3-white w3-round w3-margin-left w3-margin-right w3-padding"><br>
             <span class="heading">Rating</span>
@@ -268,10 +94,10 @@ p {
             <span class="fa fa-star checked"></span>
             <span class="fa fa-star checked"></span>
             <span class="fa fa-star notchecked"></span>
-            
+
             <p>4.1 average based on 254 reviews.</p>
             <hr style="margin:12px">
-          
+
             <div class="row w3-margin-bottom">
               <div class="side">
                 <div>5 star</div>
@@ -331,17 +157,17 @@ p {
             </div>
           </div>
 
-          <div class="w3-row-padding">
-              <div class="w3-col m12">
-                <div class="w3-card w3-round w3-white">
-                  <div class="w3-container w3-padding">
-                    <p contenteditable="true" class="w3-border w3-padding" style="width:200px">Enter your name.</p>
-                    <p contenteditable="true" class="w3-border w3-padding" style="height:100px">Enter comment...</p>
-                    <button type="button" class="w3-button w3-margin-bottom" style="background-color:#4a6eb0;color:white"><i class="fa fa-pencil"></i>  Post</button>
-                  </div>
+          <div class="w3-row-padding w3-margin-top">
+            <div class="w3-col m12">
+              <div class="w3-card w3-round w3-white">
+                <div class="w3-container w3-padding">
+                  <p contenteditable="true" class="w3-border w3-padding" style="width:200px">Enter your name.</p>
+                  <p contenteditable="true" class="w3-border w3-padding" style="height:100px">Enter comment...</p>
+                  <button type="button" class="w3-button w3-margin-bottom" style="background-color:#4a6eb0;color:white"><i class="fa fa-pencil"></i>  Post</button>
                 </div>
               </div>
             </div>
+          </div>
 
           <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
             <img src="/w3images/avatar5.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
