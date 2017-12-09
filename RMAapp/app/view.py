@@ -52,9 +52,15 @@ def reviewpage(zpid):
     this_apart = db.session.query(Apartment).filter(Apartment.zpid == zpid).one_or_none()
     def length(a):
         return len(a)
+    def integer(a):
+        return int(a)
+    def string(a):
+        return str(a)
     return render_template('reviewpage.html', title=this_apart.address[0].street,
                                               apartment=this_apart, \
-                                              len=length)
+                                              len=length,\
+                                              int=integer,\
+                                              str=string)
 
 @app.route('/database/update')
 def update_database():

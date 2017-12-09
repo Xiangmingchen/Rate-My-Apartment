@@ -309,8 +309,7 @@ def create_new_apartment(Zpid, rent):
     for name in amentity_list:
         amentities.append(Amentities(name=name))
     # add description
-    description = new_apart.find('.//homeDescription')
-    old_apart.descripion = description.text if description != None else None
+    description = new_apart.find('.//homeDescription').text if new_apart.find('.//homeDescription') != None else None
     # create a new apartment for this apartment
     new_apartment = Apartment(zpid=Zpid, \
                               rentPerMonth=rent, \
@@ -320,7 +319,10 @@ def create_new_apartment(Zpid, rent):
                               comps=True,\
                               details=[details],\
                               rooms=rooms,\
-                              amentities=amentities)
+                              amentities=amentities,\
+                              review_number=0,\
+                              average_rating=0,\
+                              descripion=description)
     # adding cities
     cities = db.session.query(City).all()
     city_exist = False
