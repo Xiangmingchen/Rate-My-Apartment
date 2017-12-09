@@ -4,14 +4,14 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='review.css') }}">
 <div class="w3-main w3-white w3-content w3-padding" style="max-width:1450px;margin-top:40px">
     <div class="w3-container">
-      <h2 style="color:#4a6eb0"><strong>{{ apartment.address[0].street }}</strong></h2>
+      <h2 style="color:#4a6eb0"><strong>{{ apartment.address[0].street }}, {{apartment.city.name}}</strong></h2>
       <p>	{% if apartment.rentPerMonth == None: %}
       			Unknown Rate
       		{% else: %}
       			${{apartment.rentPerMonth}} &#47; month
       		{% endif %}</p>
     </div>
-
+      <!-- pictures -->
       <div class="w3-half" style="padding:10px">
         <div class="slideshow-container w3-card">
           {% for j in range(len(apartment.image)): %}
@@ -63,6 +63,30 @@
           <hr style="margin:22px">
           <h4><strong>Amenities</strong></h4>
 	          <div class="w3-row w3-medium">
+              <!-- views -->
+              {% if apartment.details[0].view != None: %}
+                <div class="w3-col s12">
+                  <p><i class="fa fa-fw fa-image w3-medium"></i> Views: {{ apartment.details[0].view }}</p>
+                </div>
+              {% endif %}
+              <!-- parking -->
+              {% if apartment.details[0].parking_type != None: %}
+                <div class="w3-col s12">
+                  <p><i class="fa fa-fw fa-product-hunt w3-medium"></i> Parking: {{ apartment.details[0].parking_type }}</p>
+                </div>
+              {% endif %}
+              <!-- heating -->
+              {% if apartment.details[0].heating_source != None or apartment.details[0].heating_system != None : %}
+                <div class="w3-col s6">
+                  <p><i class="fa fa-fw fa-thermometer-full w3-medium"></i> Heating</p>
+                </div>
+              {% endif %}
+              <!-- cooling -->
+              {% if apartment.details[0].cooling_system != None: %}
+                <div class="w3-col s6">
+                  <p><i class="fa fa-fw fa-snowflake-o w3-medium"></i> Cooling</p>
+                </div>
+              {% endif %}
 							{% for i in range(len(apartment.amentities)): %}
 		            <div class="w3-col s6">
 		              <p><i class="fa fa-fw fa-circle w3-medium"></i> {{ apartment.amentities[i].name }}</p>
