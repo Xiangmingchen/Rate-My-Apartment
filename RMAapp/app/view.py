@@ -11,12 +11,12 @@ def homepage():
     if form.validate_on_submit():
         search = form.search.data
         return redirect(url_for('filter', search=search))
-    return render_template('home.html', form=form)
+    return render_template('home.html', title="Rate My Apartment", form=form)
 
 
-@app.route('/filter/<search>')
+@app.route('/filter/<search>', methods=['GET', 'POST'])
 def filter(search=None):
-
+    form = SearchForm()
     # Dispay the apartments with pictures first
     apartments = db.session.query(Apartment) \
                         .order_by(Apartment.image_count.desc()) \
@@ -28,25 +28,28 @@ def filter(search=None):
     local_apart = []
     if search is not None:
         for apartment in apartments:
-            if apartment.address[0].city == search:
+            if apartment.address[0].city.capitalize() == search:
                 local_apart.append(apartment)
         apartments = local_apart
 
     def length(a):
         return len(a)
-
-    return render_template('index.html', title='Home', \
+    if form.validate_on_submit():
+        search = form.search.data
+        return redirect(url_for('filter', search=search))
+    return render_template('index.html', title='Search ' + search, \
                             apartments=apartments, \
                             rows=math.ceil(len(apartments) / 3),\
                             length=len(apartments), \
-                            len=length)
+                            len=length, form=form)
 
 @app.route('/reviewpage/<int:zpid>')
 def reviewpage(zpid):
     this_apart = db.session.query(Apartment).filter(Apartment.zpid == zpid).one_or_none()
     def length(a):
         return len(a)
-    return render_template('reviewpage.html', apartment=this_apart, \
+    return render_template('reviewpage.html', title=this_apart.address[0].street,
+                                              apartment=this_apart, \
                                               len=length)
 
 @app.route('/database/update')

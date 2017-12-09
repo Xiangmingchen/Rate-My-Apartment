@@ -165,6 +165,9 @@ p {
         display: none;
     }
 }
+.details p {
+  text-indent: 25px;
+}
 </style>
 
 <div class="w3-main w3-white w3-content w3-padding" style="max-width:1450px;margin-top:40px">
@@ -196,39 +199,53 @@ p {
         </div>
 
         <div class="w3-card" style="margin-top:25px;padding:10px;padding-left:20px;padding-right:20px">
-          <h4><strong>The space</strong></h4>
+					<!-- Rooms -->
+					<h5><strong>Rooms</strong></h5>
           <div class="w3-row w3-medium">
             <div class="w3-col s6">
-              <p><i class="fa fa-fw fa-bed"></i> Bedrooms: {{ apartment.details[0].bedrooms }}</p>
+              <p><i class="fa fa-fw fa-bath"></i> Bathrooms:
+								{% if apartment.details[0].bathrooms != None: %}
+									{{ apartment.details[0].bathrooms }}
+								{% else: %} Unknown {% endif %}</p>
             </div>
             <div class="w3-col s6">
-              <p><i class="fa fa-fw fa-bath"></i> Bathrooms: {{ apartment.details[0].bathrooms }}</p>
+              <p><i class="fa fa-fw fa-bed"></i> Bedrooms:
+									{% if apartment.details[0].bedrooms != None: %}
+										{{ apartment.details[0].bedrooms }}
+									{% else: %} Unknown {% endif %}</p>
             </div>
+						{% if len(apartment.rooms) > 0: %}
+		          <div class="w3-row">
+								{% for i in range(len(apartment.rooms)): %}
+			            <div class="w3-half">
+			              <p><i class="fa fa-fw fa-circle-o"></i> {{ apartment.rooms[i].name }}</p>
+									</div>
+								{% endfor %}
+		          </div>
+						{% endif %}
           </div>
-          <hr style="margin:12px">
-
-          <h4><strong>Amenities</strong></h4>
-          <div class="w3-row w3-medium">
-            <div class="w3-col s6">
-              <p><i class="fa fa-fw fa-thermometer"></i> Heating</p>
-              <p><i class="fa fa-fw fa-snowflake-o"></i> Air Conditioning</p>
-              <p><i class="fa fa-fw fa-wifi"></i> WiFi</p>
-              <p><i class="fa fa-fw fa-tv"></i> TV</p>
               
-            </div>
-            <div class="w3-col s6">
-              <p><i class="fa fa-fw fa-cutlery"></i> Kitchen</p>
-              <p><i class="fa fa-fw fa-shower"></i> Shower</p>
-              <p><i class="fa fa-fw fa-wheelchair"></i> Accessible</p>
-              <p><i class="fa fa-fw fa-car"></i> Parking</p>
-            </div>
-          </div>
-          <hr style="margin:12px">
-
-          <h4><strong>Extra Info</strong></h4>
-          <p>xxx</p>
-          <p>We accept: <i class="fa fa-credit-card w3-large"></i> <i class="fa fa-cc-mastercard w3-large"></i> <i class="fa fa-cc-amex w3-large"></i> <i class="fa fa-cc-cc-visa w3-large"></i><i class="fa fa-cc-paypal w3-large"></i></p>
-
+					<!-- Amentities -->
+					{% if len(apartment.amentities) > 0: %}
+					<hr style="margin:12px">
+	          <h5><strong>Amenities</strong></h5>
+	          <div class="w3-row">
+							{% for i in range(len(apartment.amentities)): %}
+		            <div class="w3-half">
+		              <p><i class="fa fa-fw">•</i>{{ apartment.amentities[i].name }}</p>
+								</div>
+							{% endfor %}
+	          </div>
+					{% endif %}
+              
+					<!-- Description -->
+					{% if apartment.descripion != None: %}
+					<hr style="margin:12px">
+          <h5><strong>Description</strong></h5>
+					<div class="details" style="padding:0 10px">
+						 <p>{{ apartment.descripion }}</p>
+					</div>
+					{% endif %}
         </div>
 
         <section id="google map" class="w3-card w3-margin-top">
