@@ -6,6 +6,9 @@ body, html {
 	height: 100%;
 	line-height: 1.5;
 }
+.details p {
+  text-indent: 25px;
+}
 </style>
 
 <div class="w3-main w3-white w3-padding" style="max-width:1400px;margin-top:40px">
@@ -39,7 +42,8 @@ body, html {
         </div>
 
         <div class="w3-card" style="margin-top:25px;padding:10px;padding-left:20px;padding-right:20px">
-          <h5><strong>Rooms</strong></h5>
+					<!-- Rooms -->
+					<h5><strong>Rooms</strong></h5>
           <div class="w3-row w3-medium">
             <div class="w3-col s6">
               <p><i class="fa fa-fw fa-bath"></i> Bathrooms:
@@ -63,9 +67,9 @@ body, html {
 		          </div>
 						{% endif %}
           </div>
-          <hr style="margin:12px">
-
+					<!-- Amentities -->
 					{% if len(apartment.amentities) > 0: %}
+					<hr style="margin:12px">
 	          <h5><strong>Amenities</strong></h5>
 	          <div class="w3-row">
 							{% for i in range(len(apartment.amentities)): %}
@@ -74,13 +78,14 @@ body, html {
 								</div>
 							{% endfor %}
 	          </div>
-	          <hr style="margin:12px">
 					{% endif %}
-
+					<!-- Description -->
 					{% if apartment.descripion != None: %}
-          <h5><strong>Description</strong></h5>
-          <p>{{ apartment.descripion }}</p>
 					<hr style="margin:12px">
+          <h5><strong>Description</strong></h5>
+					<div class="details" style="padding:0 10px">
+						 <p>{{ apartment.descripion }}</p>
+					</div>
 					{% endif %}
         </div>
 
