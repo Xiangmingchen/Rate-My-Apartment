@@ -1,10 +1,9 @@
-<link rel="stylesheet" href="{{ url_for('static', filename='reviewpage.css') }}">
 body, html {
 	height: 100%;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 p {
-  font-size: 18px;
+  font-size: 17px;
 }
 
 * {box-sizing:border-box}
@@ -27,7 +26,7 @@ p {
   margin-top: -22px;
   color: white;
   font-weight: bold;
-  font-size: 30px;
+  font-size: 35px;
   transition: 0.6s ease;
   border-radius: 0 3px 3px 0;
 }
@@ -50,14 +49,14 @@ p {
   padding: 8px 16px;
   position: absolute;
   top: 0;
-  text-shadow: black 1px 0 10px; 
+  text-shadow: black 1px 0 10px;
 }
 
 /* The dots/bullets/indicators */
 .dot {
   cursor: pointer;
-  height: 15px;
-  width: 15px;
+  height: 12px;
+  width: 12px;
   margin: 0 2px;
   background-color: #bbb;
   border-radius: 50%;
@@ -78,12 +77,12 @@ p {
 }
 
 @-webkit-keyframes fade {
-  from {opacity: .4} 
+  from {opacity: .4}
   to {opacity: 1}
 }
 
 @keyframes fade {
-  from {opacity: .4} 
+  from {opacity: .4}
   to {opacity: 1}
 }
 
@@ -97,7 +96,7 @@ p {
 
 .heading {
     font-size: 20px;
-    margin-right: 25px;
+    margin-right: 20px;
 }
 
 .fa {
@@ -105,7 +104,11 @@ p {
 }
 
 .checked {
-    color: orange;
+    color: #4a6eb0;
+}
+
+.notchecked {
+  color:#bbb
 }
 
 /* Three column layout */
@@ -113,6 +116,7 @@ p {
     float: left;
     width: 15%;
     margin-top: 10px;
+    font-size:17px
 }
 
 .middle {
@@ -141,13 +145,6 @@ p {
     color: white;
 }
 
-/* Individual bars */
-.bar-5 {width: 60%; height: 18px; background-color: #3d5676;}
-.bar-4 {width: 30%; height: 18px; background-color: #456185;}
-.bar-3 {width: 10%; height: 18px; background-color: #4c6a92;}
-.bar-2 {width: 4%; height: 18px; background-color: #6888b1;}
-.bar-1 {width: 15%; height: 18px; background-color: #8ea6c5;}
-
 /* Responsive layout - make the columns stack on top of each other instead of next to each other */
 @media (max-width: 400px) {
     .side, .middle {
@@ -157,4 +154,136 @@ p {
     .right {
         display: none;
     }
+}
+.details p {
+  text-indent: 25px;
+}
+
+.rating-display.r0 > i{
+	color: #bbb;
+}
+
+.rating-display.r1 > i:nth-of-type(1){
+	color:#4a6eb0;
+}
+.rating-display.r1 > i:nth-of-type(1) ~ i{
+	color: #bbb;
+}
+
+.rating-display.r2 > i{
+	color: #4a6eb0;
+}
+.rating-display.r2 > i:nth-of-type(2) ~ i{
+	color: lightgray;
+}
+.rating-display.r3 > i{
+	color: #4a6eb0;
+}
+.rating-display.r3 > i:nth-of-type(3) ~ i{
+	color: #bbb;
+}
+.rating-display.r4 > i{
+	color: #4a6eb0;
+}
+.rating-display.r4 > i:nth-of-type(4) ~ i{
+	color: #bbb;
+}
+.rating-display.r5 > i{
+	color: #4a6eb0;
+}
+
+.icon {
+    margin:3px; 
+}
+
+.rating {
+display: inline-block;
+position: relative;
+height: 20px;
+line-height: 20px;
+font-size: 20px;
+}
+
+.rating label {
+position: absolute;
+top: 0;
+left: 0;
+height: 100%;
+cursor: pointer;
+}
+
+.rating label:last-child {
+position: static;
+}
+
+.rating label:nth-child(1) {
+z-index: 5;
+}
+
+.rating label:nth-child(2) {
+z-index: 4;
+}
+
+.rating label:nth-child(3) {
+z-index: 3;
+}
+
+.rating label:nth-child(4) {
+z-index: 2;
+}
+
+.rating label:nth-child(5) {
+z-index: 1;
+}
+
+.rating label input {
+position: absolute;
+top: 0;
+left: 0;
+opacity: 0;
+}
+
+.rating label .icon {
+float: left;
+color: transparent;
+}
+
+.rating label:last-child .icon {
+color: #bbb;
+}
+
+.rating:not(:hover) label input:checked ~ .icon,
+.rating:hover label:hover input ~ .icon {
+color: #4a6eb0;
+}
+
+.rating label input:focus:not(:checked) ~ .icon:last-child {
+color: #bbb;
+text-shadow: 0 0 5px #4a6eb0;
+}
+
+.scrollbar
+{
+	background: #F5F5F5;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+#style1::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+	background-color: #F5F5F5;
+}
+
+#style1::-webkit-scrollbar
+{
+	width: 12px;
+	background-color: #F5F5F5;
+}
+
+#style1::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #4a6eb0;
 }

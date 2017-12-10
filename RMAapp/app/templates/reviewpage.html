@@ -1,14 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<style>
-/* Individual bars */
-.bar-5 {width: 80%; height: 20px; background-color: #4a6eb0;}
-.bar-4 {width: 30%; height: 20px; background-color: #6181bd;}
-.bar-3 {width: 0%; height: 20px; background-color: #7a95c7;}
-.bar-2 {width: 4%; height: 20px; background-color: #92a8d1;}
-.bar-1 {width: 15%; height: 20px; background-color: #a9badb;}
-</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='final.css') }}">
 
 <div class="w3-main w3-white w3-content w3-padding" style="max-width:1450px;margin-top:40px">
     <div class="w3-container">
@@ -186,20 +179,20 @@
                       <div style="display:block; padding-top:10px">
                         {{ form.content(class="w3-border w3-padding", style="height:100px; width: 100%", placeholder="Enter comment...") }}
                       </div>
-                    <button type="submit" class="w3-button w3-margin-bottom" style="background-color:#4a6eb0;color:white"><i class="fa fa-pencil"></i>  Post</button>
+                    <button type="submit" class="w3-button w3-margin-bottom" style="background-color:#4a6eb0;color:white;margin-top:5px"><i class="fa fa-pencil"></i>  Post</button>
                   </form>
                 </div>
               </div>
             </div>
           </div>
           <!-- display previous reviews -->
-          <div class="w3-container w3-card w3-white w3-round w3-margin w3-padding" style="width:100%; max-height: 500px; overflow: scroll;">
+          <div class="w3-container w3-card w3-white w3-round w3-margin w3-padding scrollbar" id="style1" style="max-height: 1000px">
             <h4><strong>Previous Reviews</strong></h4>
             {% if len(apartment.review) == 0: %}
               <h5 style="margin-left: 10px; margin-top: 5px">Be the first to leave a comment!</h5>
             {% endif %}
+            <div style="padding-right:15px;padding-left:15px;padding-top:10px">
               {% for i in range(len(apartment.review)-1, -1, -1) %}
-              <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
                 <span class="w3-right w3-opacity">{{apartment.review[i].time_stamp.strftime("%b %d %Y")}}</span>
                 <h4>{{apartment.review[i].user_name}}</h4>
                 <div class="rating-display {{"r"+str(int(apartment.review[i].rating))}}" style="margin-left:3px">
@@ -209,12 +202,11 @@
                   <i class="fa fa-star"></i>
                   <i class="fa fa-star"></i>
                 </div>
-                <hr style="margin:5px">
                 <p>{{apartment.review[i].content}}</p>
-              </div>
+                <hr style="margin:10px">
               {% endfor %}
+            </div>
           </div>
-
       </div>
     </div>
 

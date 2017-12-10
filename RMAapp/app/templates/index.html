@@ -33,7 +33,7 @@ img {
         <div class="w3-container w3-display-container">
             <hr>
             <form method="POST">
-                <p><label><i class="fa fa-location-arrow"></i> Location</label></p>
+                <p><label><i class="fa fa-location-arrow"></i> Search City</label></p>
 					{{ form.csrf_token }}{{ form.search(class="w3-input w3-border", type="text", autocomplete="off") }}
                 <p><button class="w3-button w3-block w3-blue-grey w3-left-align" type="submit">
 					<i class="fa fa-search w3-margin-right"></i> Search</button>
@@ -54,7 +54,7 @@ img {
 				<img src="{{ url_for('static', filename='images/Noimage.png') }}">
 				{% endif %}
 			</a>
-			<p style="width: 200px; overflow: hidden">{{apartments[count[0]].address[0].street}}<br>
+			<p style="font-size:15px">{{apartments[count[0]].address[0].street}}<br>
 				{% if apartments[count[0]].rentPerMonth == None: %}
 					Unknown Rate
 				{% else: %}
