@@ -5,11 +5,9 @@ from migrate import *
 from migrate.changeset import schema
 pre_meta = MetaData()
 post_meta = MetaData()
-apartment = Table('apartment', post_meta,
+city = Table('city', post_meta,
     Column('id', Integer, primary_key=True, nullable=False),
-    Column('zpid', Integer, nullable=False),
-    Column('rentPerMonth', Float),
-    Column('image_count', Integer),
+    Column('name', String, nullable=False),
 )
 
 
@@ -18,11 +16,11 @@ def upgrade(migrate_engine):
     # migrate_engine to your metadata
     pre_meta.bind = migrate_engine
     post_meta.bind = migrate_engine
-    post_meta.tables['apartment'].columns['image_count'].create()
+    post_meta.tables['city'].create()
 
 
 def downgrade(migrate_engine):
     # Operations to reverse the above upgrade go here.
     pre_meta.bind = migrate_engine
     post_meta.bind = migrate_engine
-    post_meta.tables['apartment'].columns['image_count'].drop()
+    post_meta.tables['city'].drop()
