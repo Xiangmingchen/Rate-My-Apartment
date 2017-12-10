@@ -1,8 +1,8 @@
 from flask import Flask, render_template, flash, redirect, request, url_for
 from app import app, db, data
-from app.models import Apartment, Address, City
+from app.models import Apartment, Address, City, Review
 from app.forms import SearchForm, ReviewForm
-import math
+import math, datetime
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -50,19 +50,35 @@ def filter(search=None):
 @app.route('/reviewpage/<int:zpid>')
 def reviewpage(zpid):
     this_apart = db.session.query(Apartment).filter(Apartment.zpid == zpid).one_or_none()
+    submitted = False
+    form = ReviewForm()
+    # when a review is submitted
+    if form.validate_on_submit():
+        username = form.username.data
+        rating = form.rating.data
+        content = form.comment.data
+        timestamp = datetime.date.today()
+        new_review = Review(user_name=username, content=content, rating=rating, time_stamp=timestamp)
+        this_apart.average_rating = (this_apart.average_rating * this_apart.review_number + rating) / (this_apart.review_number + 1)
+        this_apart.review_number += 1
+        this_apart.review.append(new_review)
+        db.session.commit()
+        submitted = True
+        flash('Thank you for your comments!')
+
     def length(a):
         return len(a)
     def integer(a):
         return int(a)
     def string(a):
         return str(a)
-    form = ReviewForm()
     return render_template('reviewpage.html', title=this_apart.address[0].street,
                                               apartment=this_apart, \
                                               len=length,\
                                               int=integer,\
                                               str=string,\
-                                              form=form)
+                                              form=form,\
+                                              submitted=submitted)
 
 @app.route('/database/update')
 def update_database():

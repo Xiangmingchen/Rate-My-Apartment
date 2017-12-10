@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, Float, Text, Boolean
+from sqlalchemy import Column, ForeignKey, Integer, String, Float, Text, Boolean, DateTime
 from sqlalchemy.orm import relationship
 from app import db
 
@@ -102,7 +102,7 @@ class Review(db.Model):
     user_name = Column(String(50), nullable=False)
     content = Column(Text, nullable=False)
     rating = Column(Float, default=0)
-    timestamp = Column(String)
+    time_stamp = Column(DateTime)
     apartment_id = Column(Integer, ForeignKey('apartment.id'))
 
     def __repr__(self):

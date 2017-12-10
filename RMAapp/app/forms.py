@@ -8,4 +8,4 @@ class SearchForm(FlaskForm):
 class ReviewForm(FlaskForm):
     username = StringField('Username', [validators.Length(min=4, max=25)])
     rating = IntegerField('Rating', [validators.InputRequired()])
-    comment = TextAreaField('Comment', [validators.Length(min=10, max=100000)])
+    content = TextAreaField('Content', [validators.Length(min=10, max=100000)])

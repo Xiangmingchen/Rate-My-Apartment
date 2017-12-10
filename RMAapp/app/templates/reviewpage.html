@@ -199,11 +199,14 @@
                       <span class="fa fa-star"></span>
                       <span class="fa fa-star"></span>
                     </div>
+                    <div class="padding-top:10px">
+                      {{ form.rating(placeholder="Enter rating.") }}
+                    </div>
                     <div style="width:200px; padding-top:10px">
               				{{ form.username(class="w3-border w3-padding", placeholder="Enter your name.") }}
                     </div>
                     <div style="display:block; padding-top:10px">
-                      {{ form.comment(class="w3-border w3-padding", style="height:100px; width: 100%", placeholder="Enter comment...") }}
+                      {{ form.content(class="w3-border w3-padding", style="height:100px; width: 100%", placeholder="Enter comment...") }}
                     </div>
                     <button type="submit" class="w3-button w3-margin-bottom" style="background-color:#4a6eb0;color:white"><i class="fa fa-pencil"></i>  Post</button>
                   </form>
