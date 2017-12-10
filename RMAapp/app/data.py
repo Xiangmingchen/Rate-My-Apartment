@@ -14,7 +14,8 @@ from app.models import Apartment, Address, Image, Review, Details, Rooms, Amenti
 def update_database():
     current_list = db.session.query(Apartment).all()
     for apartment in current_list:
-        update_apartment_info(apartment, apartment.rentPerMonth)
+        new_rent = get_rent(apartment.zpid)
+        update_apartment_info(apartment, new_rent)
 
 # Request GetComps from Zillow based on zpid, add new apartments to the database
 # This fuction will not request if the zpid has been center_requested before
@@ -28,8 +29,10 @@ def update_database():
 #   1. Comp error: when GetComps returns error
 #       handling: print error message to console, return False
 def center_request(zpid):
+    if isinstance(zpid, tuple):
+        zpid = zpid[0]
     # check whether this apartment has been a center of request
-    thisApart = db.session.query(Apartment).filter(Apartment.zpid == zpid[0]).one_or_none()
+    thisApart = db.session.query(Apartment).filter(Apartment.zpid == zpid).one_or_none()
     if thisApart is not None and not thisApart.comps:
         return 0
     # The following lines request 25 more property info with one known zpid
@@ -48,13 +51,18 @@ def center_request(zpid):
     new_apart_count = 0
     # Store the apartments info into database
     for apart in compList:
-        thisApart = db.session.query(Apartment).filter(Apartment.zpid == zpid[0]).one_or_none()
-        if thisApart is None:  # if this apartment is not in our database, add it to database
-            if create_new_apartment(zpid, rent_handler(apart)):
+        zp_id = int(apart.find('.//zpid').text)
+        this_Apart = db.session.query(Apartment).filter(Apartment.zpid == zp_id).one_or_none()
+        if this_Apart is None:  # if this apartment is not in our database, add it to database
+            if create_new_apartment(zp_id, rent_handler(apart)):
                 new_apart_count += 1
         # else: # otherwise update the info for this apartment
         #     update_apartment_info(thisApart, float(apart.find('./rentzestimate/amount').text))
         # compzpidlist.append(zpid)
+    if thisApart == None:
+        if create_new_apartment(zpid, rent_handler(root.find('.//principal'))):
+            new_apart_count += 1
+    thisApart = db.session.query(Apartment).filter(Apartment.zpid == zpid).one_or_none()
     thisApart.comps = False
     db.session.commit()
     return new_apart_count
@@ -96,7 +104,7 @@ def count_rows(table_name):
     return count
 
 # Display all the rows of a table, both printed to console and return as a string
-# input: table_name: only 'apartment' or 'address' are valid
+# input: table_name: 'city', 'details', 'apartment' or 'address' are valid
 # return: on success: a string representation of all the data in the specified data
 #         on failure: 'Invalid table name'
 def display_data(table_name):
@@ -209,7 +217,7 @@ def delete_address_by_id(id):
 
 # Request GetUpdatedPropertyDetails and store the response
 # input: zpid: the zpid to request
-# return: a string specifying the name of new file is created
+# return: a string specifying the name of new file created
 def store_response_file(zpid):
     # request from GetUpdatedPropertyDetails API
     parameters = {'zws-id': ZillowAPI.zwsid, 'zpid': zpid}
@@ -217,6 +225,20 @@ def store_response_file(zpid):
     xmlOfRoot = xml.dom.minidom.parseString(response.content)
     prettyXml = xmlOfRoot.toprettyxml()
 
+    filename = str(zpid) + '.xml'
+    file = open(filename, 'w+')
+    file.write(prettyXml)
+    file.close()
+    return 'File written as %s' % filename
+
+# Request GetComps and store the response
+# inpust: zpid: the zpid to request
+# return: a string specifying the name of new file created
+def store_comps_file(zpid):
+    parameters = {'zws-id': ZillowAPI.zwsid, 'zpid': zpid, 'count': 25, 'rentzestimate': True}
+    response = requests.get("http://www.zillow.com/webservice/GetComps.htm", params=parameters)
+    xmlOfRoot = xml.dom.minidom.parseString(response.content)
+    prettyXml = xmlOfRoot.toprettyxml()
     filename = str(zpid) + '.xml'
     file = open(filename, 'w+')
     file.write(prettyXml)
@@ -280,24 +302,24 @@ def create_new_apartment(Zpid, rent):
     image_count = len(images_list)
 
     # adding details to the apartment
-    facts_root = new_apart.find('.//editedFacts')
-    bedrooms = int(facts_root.find('./bedrooms').text) if facts_root.find('./bedrooms') != None else None
-    bathrooms = float(facts_root.find('./bathrooms').text) if facts_root.find('./bathrooms') != None else None
-    area = int(facts_root.find('./finishedSqFt').text) if facts_root.find('./finishedSqFt') != None else None
-    lot_area = int(facts_root.find('./lotSizeSqFt').text) if facts_root.find('./lotSizeSqFt') != None else None
-    year_built = int(facts_root.find('./yearBuilt').text) if facts_root.find('./yearBuilt') != None else None
-    year_update = int(facts_root.find('./yearUpdated').text) if facts_root.find('./yearUpdated') != None else None
-    num_floor = int(facts_root.find('./numFloors').text) if facts_root.find('./numFloors') != None else None
-    basement = facts_root.find('./basement').text if facts_root.find('./basement') != None else None
-    view = facts_root.find('./view').text if facts_root.find('./view') != None else None
-    parking_type = facts_root.find('./parkingType').text if facts_root.find('./parkingType') != None else None
-    heating_source = facts_root.find('./heatingSources').text if facts_root.find('./heatingSources') != None else None
-    heating_system = facts_root.find('./heatingSystem').text if facts_root.find('./heatingSystem') != None else None
-    cooling = new_apart.find('.//coolingSystem').text if new_apart.find('.//coolingSystem') != None else None
+    facts_root      = apart.find('.//editedFacts')
+    bedrooms        = int(facts_root.find('./bedrooms').text) if facts_root.find('./bedrooms') != None else None
+    bathrooms       = float(facts_root.find('./bathrooms').text) if facts_root.find('./bathrooms') != None else None
+    area            = int(facts_root.find('./finishedSqFt').text) if facts_root.find('./finishedSqFt') != None else None
+    lot_area        = int(facts_root.find('./lotSizeSqFt').text) if facts_root.find('./lotSizeSqFt') != None else None
+    year_built      = int(facts_root.find('./yearBuilt').text) if facts_root.find('./yearBuilt') != None else None
+    year_update     = int(facts_root.find('./yearUpdated').text) if facts_root.find('./yearUpdated') != None else None
+    num_floor       = int(facts_root.find('./numFloors').text) if facts_root.find('./numFloors') != None else None
+    basement        = facts_root.find('./basement').text if facts_root.find('./basement') != None else None
+    view            = facts_root.find('./view').text if facts_root.find('./view') != None else None
+    parking_type    = facts_root.find('./parkingType').text if facts_root.find('./parkingType') != None else None
+    heating_source  = facts_root.find('./heatingSources').text if facts_root.find('./heatingSources') != None else None
+    heating_system  = facts_root.find('./heatingSystem').text if facts_root.find('./heatingSystem') != None else None
+    cooling         = facts_root.find('.//coolingSystem').text if facts_root.find('.//coolingSystem') != None else None
 
     details = Details(bedrooms=bedrooms, bathrooms=bathrooms, area=area, lot_area=lot_area, cooling_system=cooling,\
-                year_built=year_built, year_update=year_update, num_floor=num_floor, \
-                basement=basement, view=view, parking_type=parking_type, heating_source=heating_source, heating_system=heating_system)
+                      year_built=year_built, year_update=year_update, num_floor=num_floor, heating_system=heating_system,\
+                      basement=basement, view=view, parking_type=parking_type, heating_source=heating_source)
     # add rooms
     rooms = []
     room_list = facts_root.find('./rooms').text.split(', ') if facts_root.find('./rooms') != None else []
@@ -309,7 +331,7 @@ def create_new_apartment(Zpid, rent):
     for name in amentity_list:
         amentities.append(Amentities(name=name))
     # add description
-    description = new_apart.find('.//homeDescription').text if new_apart.find('.//homeDescription') != None else None
+    description = apart.find('.//homeDescription').text if apart.find('.//homeDescription') != None else None
     # create a new apartment for this apartment
     new_apartment = Apartment(zpid=Zpid, \
                               rentPerMonth=rent, \
@@ -329,7 +351,7 @@ def create_new_apartment(Zpid, rent):
     for city in cities:
         if new_address.city == city.name:
             city_exist = True
-            city.apartments.append(old_apart)
+            city.apartments.append(new_apartment)
             break
     if not city_exist:
         new_city = City(name=new_address.city,\
@@ -340,7 +362,7 @@ def create_new_apartment(Zpid, rent):
     if city_exist:
         db.session.add(new_apartment)
     db.session.commit()
-    print('Created new apartment <%i>' % Zpid)
+    print('Created new apartment <%s>' % (Zpid))
     return True
 
 # Request GetUpdatedPropertyDetails
@@ -401,7 +423,14 @@ def delete_if_exist(zpid):
 #         otherwise: None
 def rent_handler(apart):
     amount = apart.find('.//rentzestimate/amount')
-    if amount:
+    if amount != None:
         return float(amount.text)
     else:
         return None
+
+
+def get_rent(zpid):
+    parameters = {'zws-id': ZillowAPI.zwsid, 'zpid': zpid, 'rentzestimate': True}
+    response = requests.get("http://www.zillow.com/webservice/GetZestimate.htm", params=parameters)
+    root = fromstring(response.content)
+    return rent_handler(root)

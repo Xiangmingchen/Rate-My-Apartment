@@ -93,12 +93,10 @@ def update_database():
     return 'Database updated'
 
 # 89045947
-@app.route('/center_request/<zpid>')
+@app.route('/center_request/<int:zpid>')
 def center_request(zpid):
-    request_success = data.center_request(zpid)
-    if not request_success:
-        return 'Request failed'
-    return 'Request succeeded'
+    new_apart_count = data.center_request(zpid)
+    return 'Request created %i new apartments' % new_apart_count
 
 @app.route('/database/query_address/<int:zpid>')
 def database(zpid):
@@ -151,5 +149,9 @@ def delete_address(id):
 @app.route('/database/store_response/<int:zpid>')
 def store_response(zpid):
     return data.store_response_file(zpid)
+
+@app.route('/database/store_comps/<int:zpid>')
+def store_comps(zpid):
+    return data.store_comps_file(zpid)
 
 app.secret_key = 'CS196'
