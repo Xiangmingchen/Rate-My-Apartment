@@ -1,15 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='redoo.css') }}">
-<style>
-/* Individual bars */
-.bar-5 {width: 60%; height: 20px; background-color: #4a6eb0;}
-.bar-4 {width: 30%; height: 20px; background-color: #6181bd;}
-.bar-3 {width: 10%; height: 20px; background-color: #7a95c7;}
-.bar-2 {width: 4%; height: 20px; background-color: #92a8d1;}
-.bar-1 {width: 15%; height: 20px; background-color: #a9badb;}
-</style>
 
 <div class="w3-main w3-white w3-content w3-padding" style="max-width:1450px;margin-top:40px">
     <div class="w3-container">
@@ -82,8 +73,8 @@
               {% endif %}
               <!-- parking -->
               {% if apartment.details[0].parking_type != None: %}
-                <div class="w3-col s12">
-                  <p><i class="fa fa-fw fa-product-hunt w3-medium"></i> Parking: {{ apartment.details[0].parking_type }}</p>
+                <div class="w3-col s6">
+                  <p><i class="fa fa-fw fa-product-hunt w3-medium"></i> Parking</p>
                 </div>
               {% endif %}
               <!-- heating -->
@@ -116,9 +107,11 @@
 					{% endif %}
         </div>
 
+
         <section id="google map" class="w3-card w3-round w3-margin-top">
-          <div id="googleMap" style="width:100%;height:400px"></div>
+          <div id="map" style="width:100%;height:400px"></div>
         </section>
+
       </div>
       <!-- rating display -->
       <div id="right" class="w3-half" style="padding:10px">
@@ -132,65 +125,6 @@
               <i class="fa fa-star"></i>
             </div>
             <p>{{"{:0.2}".format(apartment.average_rating)}} based on {{apartment.review_number}} reviews.</p>
-            <hr style="margin:12px">
-
-            <div class="row w3-margin-bottom">
-              <div class="side">
-                <div>5 star</div>
-              </div>
-              <div class="middle">
-                <div class="bar-container">
-                  <div class="bar-5"></div>
-                </div>
-              </div>
-              <div class="side right">
-                <div>150</div>
-              </div>
-              <div class="side">
-                <div>4 star</div>
-              </div>
-              <div class="middle">
-                <div class="bar-container">
-                  <div class="bar-4"></div>
-                </div>
-              </div>
-              <div class="side right">
-                <div>63</div>
-              </div>
-              <div class="side">
-                <div>3 star</div>
-              </div>
-              <div class="middle">
-                <div class="bar-container">
-                  <div class="bar-3"></div>
-                </div>
-              </div>
-              <div class="side right">
-                <div>15</div>
-              </div>
-              <div class="side">
-                <div>2 star</div>
-              </div>
-              <div class="middle">
-                <div class="bar-container">
-                  <div class="bar-2"></div>
-                </div>
-              </div>
-              <div class="side right">
-                <div>6</div>
-              </div>
-              <div class="side">
-                <div>1 star</div>
-              </div>
-              <div class="middle">
-                <div class="bar-container">
-                  <div class="bar-1"></div>
-                </div>
-              </div>
-              <div class="side right">
-                <div>20</div>
-              </div>
-            </div>
           </div>
           <!-- submit success message -->
           {% if submitted: %}
@@ -204,61 +138,60 @@
               <div class="w3-card w3-round w3-white">
                 <div class="w3-container w3-padding">
                   <h4><strong>Leave your opinion here</strong></h4>
-
-                    <form class="rating">
-                      <label>
-                        <input type="radio" name="stars" value="1" />
-                        <span class="icon fa fa-star "></span>
-                      </label>
-                      <label>
-                        <input type="radio" name="stars" value="2" />
-                        <span class="icon fa fa-star "></span>
-                        <span class="icon fa fa-star "></span>
-                      </label>
-                      <label>
-                        <input type="radio" name="stars" value="3" />
-                        <span class="icon fa fa-star "></span>
-                        <span class="icon fa fa-star "></span>
-                        <span class="icon fa fa-star "></span>
-                      </label>
-                      <label>
-                        <input type="radio" name="stars" value="4" />
-                        <span class="icon fa fa-star "></span>
-                        <span class="icon fa fa-star "></span>
-                        <span class="icon fa fa-star "></span>
-                        <span class="icon fa fa-star "></span>
-                      </label>
-                      <label>
-                        <input type="radio" name="stars" value="5" />
-                        <span class="icon fa fa-star "></span>
-                        <span class="icon fa fa-star "></span>
-                        <span class="icon fa fa-star "></span>
-                        <span class="icon fa fa-star "></span>
-                        <span class="icon fa fa-star "></span>
-                      </label>
-                    </form>
                     <form class="review" method="post">
-                    <div style="width:200px; padding-top:10px">
-                      {{ form.csrf_token }}
-              				{{ form.username(class="w3-border w3-padding", placeholder="Enter your name.") }}
-                    </div>
-                    <div style="display:block; padding-top:10px">
-                      {{ form.content(class="w3-border w3-padding", style="height:100px; width: 100%", placeholder="Enter comment...") }}
-                    </div>
-                    <button type="submit" class="w3-button w3-margin-bottom" style="background-color:#4a6eb0;color:white"><i class="fa fa-pencil"></i>  Post</button>
+                      <div class="rating">
+                        <label>
+                          <input type="radio" name="rating" value="1" />
+                          <span class="icon fa fa-star "></span>
+                        </label>
+                        <label>
+                          <input type="radio" name="rating" value="2" />
+                          <span class="icon fa fa-star "></span>
+                          <span class="icon fa fa-star "></span>
+                        </label>
+                        <label>
+                          <input type="radio" name="rating" value="3" />
+                          <span class="icon fa fa-star "></span>
+                          <span class="icon fa fa-star "></span>
+                          <span class="icon fa fa-star "></span>
+                        </label>
+                        <label>
+                          <input type="radio" name="rating" value="4" />
+                          <span class="icon fa fa-star "></span>
+                          <span class="icon fa fa-star "></span>
+                          <span class="icon fa fa-star "></span>
+                          <span class="icon fa fa-star "></span>
+                        </label>
+                        <label>
+                          <input type="radio" name="rating" value="5" />
+                          <span class="icon fa fa-star "></span>
+                          <span class="icon fa fa-star "></span>
+                          <span class="icon fa fa-star "></span>
+                          <span class="icon fa fa-star "></span>
+                          <span class="icon fa fa-star "></span>
+                        </label>
+                      </div>
+                      <div style="width:200px; padding-top:10px">
+                        {{ form.csrf_token }}
+                        {{ form.username(class="w3-border w3-padding", placeholder="Enter your name.") }}
+                      </div>
+                      <div style="display:block; padding-top:10px">
+                        {{ form.content(class="w3-border w3-padding", style="height:100px; width: 100%", placeholder="Enter comment...") }}
+                      </div>
+                    <button type="submit" class="w3-button w3-margin-bottom" style="background-color:#4a6eb0;color:white;margin-top:5px"><i class="fa fa-pencil"></i>  Post</button>
                   </form>
                 </div>
               </div>
             </div>
           </div>
           <!-- display previous reviews -->
-          <div class="w3-container w3-card w3-white w3-round w3-margin w3-padding" style="width:100%; max-height: 500px; overflow: scroll;">
+          <div class="w3-container w3-card w3-white w3-round w3-margin w3-padding scrollbar" id="style1" style="max-height: 1000px">
             <h4><strong>Previous Reviews</strong></h4>
             {% if len(apartment.review) == 0: %}
               <h5 style="margin-left: 10px; margin-top: 5px">Be the first to leave a comment!</h5>
             {% endif %}
+            <div style="padding-right:15px;padding-left:15px;padding-top:10px">
               {% for i in range(len(apartment.review)-1, -1, -1) %}
-              <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
                 <span class="w3-right w3-opacity">{{apartment.review[i].time_stamp.strftime("%b %d %Y")}}</span>
                 <h4>{{apartment.review[i].user_name}}</h4>
                 <div class="rating-display {{"r"+str(int(apartment.review[i].rating))}}" style="margin-left:3px">
@@ -268,23 +201,28 @@
                   <i class="fa fa-star"></i>
                   <i class="fa fa-star"></i>
                 </div>
-                <hr style="margin:5px">
                 <p>{{apartment.review[i].content}}</p>
-              </div>
+                {% if i != 0: %}
+                  <hr style="margin:10px">
+                {% endif %}
               {% endfor %}
+            </div>
           </div>
-
       </div>
     </div>
 
 <script>
-function myMap() {
-	var mapProp= {
-    	center:new google.maps.LatLng(40.101952, -88.227161),
-    	zoom:15
-    };
-    var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
-}
+function initMap() {
+        var uluru = {lat: {{apartment.address[0].latitude}}, lng: {{apartment.address[0].longitude}}};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 15,
+          center: uluru
+        });
+        var marker = new google.maps.Marker({
+          position: uluru,
+          map: map
+        });
+      }
 
 var slideIndex = 1;
 showSlides(slideIndex);
@@ -313,6 +251,8 @@ function showSlides(n) {
   dots[slideIndex-1].className += " active";
 }
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnXrZADZPZ7w-KpKxaCKRsFGaTfMjDffY&callback=myMap"></script>
+ <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnXrZADZPZ7w-KpKxaCKRsFGaTfMjDffY&callback=initMap">
+    </script>
 
 {% endblock %}
