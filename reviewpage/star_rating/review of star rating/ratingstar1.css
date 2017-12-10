@@ -1,30 +1,6 @@
-/*
-	Ratings Stars
-	(with as little code as possible)
-*/
-.rating {
-  unicode-bidi: bidi-override;
-  direction: rtl;
-  text-align: center;
+* {
+    box-sizing: border-box;
 }
-.rating > span {
-  display: inline-block;
-  position: relative;
-  width: 1.1em;
-}
-.rating > span:hover,
-.rating > span:hover ~ span {
-  color: transparent;
-}
-.rating > span:hover:before,
-.rating > span:hover ~ span:before {
-   content: "\2605";
-   position: absolute;
-   left: 0;
-   color: gold;
-}
-
-
 
 
 
@@ -32,9 +8,21 @@ body {
     font-family: Arial;
     margin: 0 auto; /* Center website */
     max-width: 800px; /* Max width */
-    padding: 100px;
+    padding: 20px;
 }
 
+.heading {
+    font-size: 25px;
+    margin-right: 25px;
+}
+
+.fa {
+    font-size: 25px;
+}
+
+.checked {
+    color: orange;
+}
 
 /* Three column layout */
 .side {

@@ -20,7 +20,7 @@
 .rating > span:hover ~ span:before {
    content: "\2605";
    position: absolute;
-   left: 0;
+   left: 0; 
    color: gold;
 }
 
