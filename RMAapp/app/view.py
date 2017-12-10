@@ -1,7 +1,7 @@
 from flask import Flask, render_template, flash, redirect, request, url_for
 from app import app, db, data
 from app.models import Apartment, Address, City, Review
-from app.forms import SearchForm, ReviewForm
+from app.forms import SearchForm, ReviewForm, TestForm
 import math, datetime
 
 
@@ -56,10 +56,11 @@ def filter(search=None):
 def reviewpage(zpid, submitted=False):
     this_apart = db.session.query(Apartment).filter(Apartment.zpid == zpid).one_or_none()
     form = ReviewForm()
+    form2 = TestForm()
     # when a review is submitted
     if form.validate_on_submit():
         username = form.username.data
-        rating = form.rating.data
+        rating = int(form.rating.data)
         content = form.content.data
         timestamp = datetime.date.today()
         new_review = Review(user_name=username, content=content, rating=rating, time_stamp=timestamp)
@@ -81,7 +82,8 @@ def reviewpage(zpid, submitted=False):
                                               int=rounD,\
                                               str=string,\
                                               form=form,\
-                                              submitted=submitted)
+                                              submitted=submitted,\
+                                              form2=form2)
 
 @app.route('/database/update')
 def update_database():
