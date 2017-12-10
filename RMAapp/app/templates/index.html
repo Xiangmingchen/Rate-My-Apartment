@@ -54,20 +54,20 @@ img {
 				<img src="{{ url_for('static', filename='images/Noimage.png') }}">
 				{% endif %}
 			</a>
-			<p style="padding-top:10px">{{apartments[count[0]].address[0].street}}<br>
+			<p style="width: 200px; overflow: hidden">{{apartments[count[0]].address[0].street}}<br>
 				{% if apartments[count[0]].rentPerMonth == None: %}
 					Unknown Rate
 				{% else: %}
 					${{apartments[count[0]].rentPerMonth}} &#47; month
 				{% endif %}
 			</p>
-			<div style="margin-top:-13px">
-				<span class="fa fa-star checked"></span>
-				<span class="fa fa-star checked"></span>
-				<span class="fa fa-star checked"></span>
-				<span class="fa fa-star checked"></span>
-				<span class="fa fa-star notchecked"></span>
-				<span>(111 Reviews)</span>
+			<div class="rating-display {{"r"+str(int(apartments[count[0]].average_rating))}}" style="margin-top:-16px">
+				<i class="fa fa-star w3-medium"></i>
+				<i class="fa fa-star w3-medium"></i>
+				<i class="fa fa-star w3-medium"></i>
+				<i class="fa fa-star w3-medium"></i>
+				<i class="fa fa-star w3-medium"></i>
+				<span>({{apartments[count[0]].review_number}} Reviews)</span>
 			</div>
 		{% if count.append(count.pop() + 1) %}{% endif %}
 		</div>

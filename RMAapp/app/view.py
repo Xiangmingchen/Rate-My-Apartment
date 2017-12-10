@@ -38,6 +38,10 @@ def filter(search=None):
 
     def length(a):
         return len(a)
+    def rounD(a):
+        return round(a)
+    def string(a):
+        return str(a)
     if form.validate_on_submit():
         search = form.search.data
         return redirect(url_for('filter', search=search))
@@ -45,7 +49,8 @@ def filter(search=None):
                             apartments=apartments, \
                             rows=math.ceil(len(apartments) / 3),\
                             length=len(apartments), \
-                            len=length, form=form)
+                            len=length, form=form,int=rounD,\
+                            str=string)
 
 @app.route('/reviewpage/<int:zpid>', methods=['GET', 'POST'])
 def reviewpage(zpid, submitted=False):
@@ -66,14 +71,14 @@ def reviewpage(zpid, submitted=False):
 
     def length(a):
         return len(a)
-    def integer(a):
-        return int(a)
+    def rounD(a):
+        return round(a)
     def string(a):
         return str(a)
     return render_template('reviewpage.html', title=this_apart.address[0].street,
                                               apartment=this_apart, \
                                               len=length,\
-                                              int=integer,\
+                                              int=rounD,\
                                               str=string,\
                                               form=form,\
                                               submitted=submitted)
