@@ -1,7 +1,7 @@
 from flask import Flask, render_template, flash, redirect, request, url_for
 from app import app, db, data
 from app.models import Apartment, Address, City, Review
-from app.forms import SearchForm, ReviewForm, TestForm
+from app.forms import SearchForm, ReviewForm
 import math, datetime
 
 
@@ -21,7 +21,6 @@ def filter(search=None):
     apartments = db.session.query(Apartment) \
                         .order_by(Apartment.image_count.desc()) \
                         .all()
-
     # if you want to only display the apartments in a certain city, put the city
     # zipcode at centerZipcode, and enable the following lines
     search = search.capitalize()
@@ -35,7 +34,6 @@ def filter(search=None):
             apartments = city.apartments
 
     # Sort apartments based on rating TODO
-
     def length(a):
         return len(a)
     def rounD(a):
@@ -53,23 +51,25 @@ def filter(search=None):
                             str=string)
 
 @app.route('/reviewpage/<int:zpid>', methods=['GET', 'POST'])
-def reviewpage(zpid, submitted=False):
+def reviewpage(zpid):
     this_apart = db.session.query(Apartment).filter(Apartment.zpid == zpid).one_or_none()
     form = ReviewForm()
-    form2 = TestForm()
     # when a review is submitted
-    if form.validate_on_submit():
-        username = form.username.data
-        rating = int(form.rating.data)
-        content = form.content.data
-        timestamp = datetime.date.today()
-        new_review = Review(user_name=username, content=content, rating=rating, time_stamp=timestamp)
-        this_apart.average_rating = (this_apart.average_rating * this_apart.review_number + rating) / (this_apart.review_number + 1)
-        this_apart.review_number += 1
-        this_apart.review.append(new_review)
-        db.session.commit()
-        return redirect(url_for('reviewpage', zpid=zpid, submitted=True))
-
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            username = form.username.data
+            rating = int(form.rating.data)
+            content = form.content.data
+            timestamp = datetime.date.today()
+            new_review = Review(user_name=username, content=content, rating=rating, time_stamp=timestamp)
+            this_apart.average_rating = (this_apart.average_rating * this_apart.review_number + rating) / (this_apart.review_number + 1)
+            this_apart.review_number += 1
+            this_apart.review.append(new_review)
+            db.session.commit()
+            flash('Thank you for submitting your comments!')
+            return redirect(url_for('reviewpage', zpid=zpid))
+        else:
+            pass
     def length(a):
         return len(a)
     def rounD(a):
@@ -81,9 +81,7 @@ def reviewpage(zpid, submitted=False):
                                               len=length,\
                                               int=rounD,\
                                               str=string,\
-                                              form=form,\
-                                              submitted=submitted,\
-                                              form2=form2)
+                                              form=form)
 
 @app.route('/database/update')
 def update_database():
