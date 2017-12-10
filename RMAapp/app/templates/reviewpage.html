@@ -204,7 +204,7 @@
               <div class="w3-card w3-round w3-white">
                 <div class="w3-container w3-padding">
                   <h4><strong>Leave your opinion here</strong></h4>
-                  <form class="review" method="post">
+
                     <form class="rating">
                       <label>
                         <input type="radio" name="stars" value="1" />
@@ -237,11 +237,9 @@
                         <span class="icon fa fa-star "></span>
                       </label>
                     </form>
-                    <div style="padding-top:10px">
-                      {{ form.csrf_token }}
-                      {{ form.rating(placeholder="Enter rating.") }}
-                    </div>
+                    <form class="review" method="post">
                     <div style="width:200px; padding-top:10px">
+                      {{ form.csrf_token }}
               				{{ form.username(class="w3-border w3-padding", placeholder="Enter your name.") }}
                     </div>
                     <div style="display:block; padding-top:10px">
@@ -254,7 +252,7 @@
             </div>
           </div>
           <!-- display previous reviews -->
-          <div class="w3-container w3-card w3-white w3-round w3-margin w3-padding" style="width:100%; max-height: 600px; overflow: scroll;">
+          <div class="w3-container w3-card w3-white w3-round w3-margin w3-padding" style="width:100%; max-height: 500px; overflow: scroll;">
             <h4><strong>Previous Reviews</strong></h4>
             {% if len(apartment.review) == 0: %}
               <h5 style="margin-left: 10px; margin-top: 5px">Be the first to leave a comment!</h5>
