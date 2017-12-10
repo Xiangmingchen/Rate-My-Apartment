@@ -1,6 +1,6 @@
 from flask import Flask, render_template, flash, redirect, request, url_for
 from app import app, db, data
-from app.models import Apartment, Address
+from app.models import Apartment, Address, City
 from app.forms import SearchForm
 import math
 
@@ -27,10 +27,14 @@ def filter(search=None):
     search = search.capitalize()
     local_apart = []
     if search is not None:
-        for apartment in apartments:
-            if apartment.address[0].city.capitalize() == search:
-                local_apart.append(apartment)
-        apartments = local_apart
+        city = db.session.query(City).filter(City.name == search).one_or_none()
+        if city == None:
+            # TODO display error page
+            apartments = []
+        else:
+            apartments = city.apartments
+
+    # Sort apartments based on rating TODO
 
     def length(a):
         return len(a)
@@ -48,9 +52,15 @@ def reviewpage(zpid):
     this_apart = db.session.query(Apartment).filter(Apartment.zpid == zpid).one_or_none()
     def length(a):
         return len(a)
+    def integer(a):
+        return int(a)
+    def string(a):
+        return str(a)
     return render_template('reviewpage.html', title=this_apart.address[0].street,
                                               apartment=this_apart, \
-                                              len=length)
+                                              len=length,\
+                                              int=integer,\
+                                              str=string)
 
 @app.route('/database/update')
 def update_database():

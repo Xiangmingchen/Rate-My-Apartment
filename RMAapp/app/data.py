@@ -4,7 +4,7 @@ import xml.dom.minidom
 from lxml import html, etree
 from app import ZillowAPI, db
 from sqlalchemy import create_engine, func
-from app.models import Apartment, Address, Image, Review, Details, Rooms, Amentities
+from app.models import Apartment, Address, Image, Review, Details, Rooms, Amentities, City
 
 ## --------------- Interface functions --------------------
 # Update the entire database
@@ -89,6 +89,8 @@ def count_rows(table_name):
         count = db.session.query(func.count(Rooms.id)).scalar()
     elif table_name == 'amentities':
         count = db.session.query(func.count(Amentities.id)).scalar()
+    elif table_name == 'city':
+        count = db.session.query(func.count(City.id)).scalar()
     else:
         count = -1
     return count
@@ -120,6 +122,11 @@ def display_data(table_name):
             display = '\n'.join([display, '{:3} | {:3} | {:4} | {:8} | {:6} | {}'.format \
                      (detail.id, detail.bedrooms if detail.bedrooms else 'None', detail.bathrooms if detail.bathrooms else 'None', detail.year_update if detail.year_update else 'None', \
                      detail.num_floor if detail.num_floor else 'None', detail.parking_type if detail.parking_type else 'None')])
+    elif table_name == 'city':
+        cities = db.session.query(City).all()
+        display = '{:3} | {:10} | {:6}'.format('id', 'city', 'num_ap')
+        for city in cities:
+            display = '\n'.join([display, '{:3} | {:10} | {:6}'.format(city.id, city.name, len(city.apartments))])
     else:
         display = 'Invalid table name'
     print('%s data' % table_name)
@@ -259,7 +266,7 @@ def create_new_apartment(Zpid, rent):
     # create a new address for this apartment
     new_address = Address(street=apart.find('.//address/street').text, \
                           zipcode=int(apart.find('.//address/zipcode').text), \
-                          city=apart.find('.//address/city').text.title(), \
+                          city=apart.find('.//address/city').text.capitalize(), \
                           state=apart.find('.//address/state').text, \
                           longitude=float(apart.find('.//address/longitude').text), \
                           latitude=float(apart.find('.//address/latitude').text))
@@ -286,8 +293,9 @@ def create_new_apartment(Zpid, rent):
     parking_type = facts_root.find('./parkingType').text if facts_root.find('./parkingType') != None else None
     heating_source = facts_root.find('./heatingSources').text if facts_root.find('./heatingSources') != None else None
     heating_system = facts_root.find('./heatingSystem').text if facts_root.find('./heatingSystem') != None else None
+    cooling = new_apart.find('.//coolingSystem').text if new_apart.find('.//coolingSystem') != None else None
 
-    details = Details(bedrooms=bedrooms, bathrooms=bathrooms, area=area, lot_area=lot_area, \
+    details = Details(bedrooms=bedrooms, bathrooms=bathrooms, area=area, lot_area=lot_area, cooling_system=cooling,\
                 year_built=year_built, year_update=year_update, num_floor=num_floor, \
                 basement=basement, view=view, parking_type=parking_type, heating_source=heating_source, heating_system=heating_system)
     # add rooms
@@ -301,8 +309,7 @@ def create_new_apartment(Zpid, rent):
     for name in amentity_list:
         amentities.append(Amentities(name=name))
     # add description
-    description = new_apart.find('.//homeDescription')
-    old_apart.descripion = description.text if description != None else None
+    description = new_apart.find('.//homeDescription').text if new_apart.find('.//homeDescription') != None else None
     # create a new apartment for this apartment
     new_apartment = Apartment(zpid=Zpid, \
                               rentPerMonth=rent, \
@@ -312,10 +319,26 @@ def create_new_apartment(Zpid, rent):
                               comps=True,\
                               details=[details],\
                               rooms=rooms,\
-                              amentities=amentities)
+                              amentities=amentities,\
+                              review_number=0,\
+                              average_rating=0,\
+                              descripion=description)
+    # adding cities
+    cities = db.session.query(City).all()
+    city_exist = False
+    for city in cities:
+        if new_address.city == city.name:
+            city_exist = True
+            city.apartments.append(old_apart)
+            break
+    if not city_exist:
+        new_city = City(name=new_address.city,\
+                    apartments=[new_apartment])
+        db.session.add(new_city)
 
     # Add this new apartment to our database
-    db.session.add(new_apartment)
+    if city_exist:
+        db.session.add(new_apartment)
     db.session.commit()
     print('Created new apartment <%i>' % Zpid)
     return True

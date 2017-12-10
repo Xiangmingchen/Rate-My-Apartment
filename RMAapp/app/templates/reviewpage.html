@@ -13,10 +13,14 @@
 
 <div class="w3-main w3-white w3-content w3-padding" style="max-width:1450px;margin-top:40px">
     <div class="w3-container">
-      <h2 style="color:#4a6eb0"><strong>{{ apartment.address[0].street }}</strong></h2>
-      <p>${{apartment.rentPerMonth}} &#47; month</p>
+      <h2 style="color:#4a6eb0"><strong>{{ apartment.address[0].street }}, {{apartment.city.name}}</strong></h2>
+      <p>	{% if apartment.rentPerMonth == None: %}
+      			Unknown Rate
+      		{% else: %}
+      			${{apartment.rentPerMonth}} &#47; month
+      		{% endif %}</p>
     </div>
-
+      <!-- pictures -->
       <div class="w3-half" style="padding:10px">
         {% if len(apartment.image) > 0: %}
         <div class="slideshow-container w3-card">
@@ -25,7 +29,7 @@
             <div class="numbertext"><strong>{{ j + 1 }} / {{ len(apartment.image) }}</strong></div>
             <img src="{{ apartment.image[j].url }}" style="width:100%;max-height:500px">
           </div>
-          {% endfor %}  
+          {% endfor %}
           <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
           <a class="next" onclick="plusSlides(1)">&#10095;</a>
         </div>
@@ -33,7 +37,7 @@
         <div style="text-align:center">
           {% for q in range(len(apartment.image)): %}
           <span class="dot" onclick="currentSlide(q + 1)"></span>
-          {% endfor %} 
+          {% endfor %}
         </div>
         {% endif %}
 
@@ -54,6 +58,7 @@
                   {% else: %} Unknown {% endif %}</p>
             </div>
           </div>
+
           {% if len(apartment.rooms) > 0: %}
           <div class="w3-row w3-medium">
             {% for i in range(len(apartment.rooms)): %}
@@ -69,6 +74,30 @@
           <hr style="margin:22px">
           <h4><strong>Amenities</strong></h4>
 	          <div class="w3-row w3-medium">
+              <!-- views -->
+              {% if apartment.details[0].view != None: %}
+                <div class="w3-col s12">
+                  <p><i class="fa fa-fw fa-image w3-medium"></i> Views: {{ apartment.details[0].view }}</p>
+                </div>
+              {% endif %}
+              <!-- parking -->
+              {% if apartment.details[0].parking_type != None: %}
+                <div class="w3-col s12">
+                  <p><i class="fa fa-fw fa-product-hunt w3-medium"></i> Parking: {{ apartment.details[0].parking_type }}</p>
+                </div>
+              {% endif %}
+              <!-- heating -->
+              {% if apartment.details[0].heating_source != None or apartment.details[0].heating_system != None : %}
+                <div class="w3-col s6">
+                  <p><i class="fa fa-fw fa-thermometer-full w3-medium"></i> Heating</p>
+                </div>
+              {% endif %}
+              <!-- cooling -->
+              {% if apartment.details[0].cooling_system != None: %}
+                <div class="w3-col s6">
+                  <p><i class="fa fa-fw fa-snowflake-o w3-medium"></i> Cooling</p>
+                </div>
+              {% endif %}
 							{% for i in range(len(apartment.amentities)): %}
 		            <div class="w3-col s6">
 		              <p><i class="fa fa-fw fa-circle w3-medium"></i> {{ apartment.amentities[i].name }}</p>
@@ -91,19 +120,20 @@
           <div id="googleMap" style="width:100%;height:400px"></div>
         </section>
       </div>
-
+      <!-- rating display -->
       <div class="w3-half" style="padding:10px">
           <div class="w3-container w3-card w3-white w3-round w3-margin-left w3-margin-right w3-padding"><br>
-            <span class="heading"><strong>Rating</strong></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star notchecked"></span>
-            
-            <p>4.1 average based on 254 reviews.</p>
+            <div class="rating-display {{"r"+str(int(apartment.average_rating))}}">
+              <span class="heading"><strong>Rating</strong></span>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+            </div>
+            <p>{{apartment.average_rating}} based on {{apartment.review_number}} reviews.</p>
             <hr style="margin:12px">
-          
+
             <div class="row w3-margin-bottom">
               <div class="side">
                 <div>5 star</div>
@@ -162,7 +192,7 @@
               </div>
             </div>
           </div>
-
+          <!-- Adding rating -->
           <div class="w3-row-padding w3-margin-top">
             <div class="w3-col m12">
               <div class="w3-card w3-round w3-white">
@@ -247,15 +277,15 @@ function showSlides(n) {
   var i;
   var slides = document.getElementsByClassName("mySlides");
   var dots = document.getElementsByClassName("dot");
-  if (n > slides.length) {slideIndex = 1}    
+  if (n > slides.length) {slideIndex = 1}
   if (n < 1) {slideIndex = slides.length}
   for (i = 0; i < slides.length; i++) {
-      slides[i].style.display = "none";  
+      slides[i].style.display = "none";
   }
   for (i = 0; i < dots.length; i++) {
       dots[i].className = dots[i].className.replace(" active", "");
   }
-  slides[slideIndex-1].style.display = "block";  
+  slides[slideIndex-1].style.display = "block";
   dots[slideIndex-1].className += " active";
 }
 </script>
