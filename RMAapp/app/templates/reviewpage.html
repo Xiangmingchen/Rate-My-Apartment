@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='redoo.css') }}">
+
 <style>
 /* Individual bars */
-.bar-5 {width: 60%; height: 20px; background-color: #4a6eb0;}
+.bar-5 {width: 80%; height: 20px; background-color: #4a6eb0;}
 .bar-4 {width: 30%; height: 20px; background-color: #6181bd;}
-.bar-3 {width: 10%; height: 20px; background-color: #7a95c7;}
+.bar-3 {width: 0%; height: 20px; background-color: #7a95c7;}
 .bar-2 {width: 4%; height: 20px; background-color: #92a8d1;}
 .bar-1 {width: 15%; height: 20px; background-color: #a9badb;}
 </style>
@@ -132,65 +132,6 @@
               <i class="fa fa-star"></i>
             </div>
             <p>{{"{:0.2}".format(apartment.average_rating)}} based on {{apartment.review_number}} reviews.</p>
-            <hr style="margin:12px">
-
-            <div class="row w3-margin-bottom">
-              <div class="side">
-                <div>5 star</div>
-              </div>
-              <div class="middle">
-                <div class="bar-container">
-                  <div class="bar-5"></div>
-                </div>
-              </div>
-              <div class="side right">
-                <div>150</div>
-              </div>
-              <div class="side">
-                <div>4 star</div>
-              </div>
-              <div class="middle">
-                <div class="bar-container">
-                  <div class="bar-4"></div>
-                </div>
-              </div>
-              <div class="side right">
-                <div>63</div>
-              </div>
-              <div class="side">
-                <div>3 star</div>
-              </div>
-              <div class="middle">
-                <div class="bar-container">
-                  <div class="bar-3"></div>
-                </div>
-              </div>
-              <div class="side right">
-                <div>15</div>
-              </div>
-              <div class="side">
-                <div>2 star</div>
-              </div>
-              <div class="middle">
-                <div class="bar-container">
-                  <div class="bar-2"></div>
-                </div>
-              </div>
-              <div class="side right">
-                <div>6</div>
-              </div>
-              <div class="side">
-                <div>1 star</div>
-              </div>
-              <div class="middle">
-                <div class="bar-container">
-                  <div class="bar-1"></div>
-                </div>
-              </div>
-              <div class="side right">
-                <div>20</div>
-              </div>
-            </div>
           </div>
           <!-- submit success message -->
           {% if submitted: %}
@@ -204,47 +145,46 @@
               <div class="w3-card w3-round w3-white">
                 <div class="w3-container w3-padding">
                   <h4><strong>Leave your opinion here</strong></h4>
-
-                    <form class="rating">
-                      <label>
-                        <input type="radio" name="stars" value="1" />
-                        <span class="icon fa fa-star "></span>
-                      </label>
-                      <label>
-                        <input type="radio" name="stars" value="2" />
-                        <span class="icon fa fa-star "></span>
-                        <span class="icon fa fa-star "></span>
-                      </label>
-                      <label>
-                        <input type="radio" name="stars" value="3" />
-                        <span class="icon fa fa-star "></span>
-                        <span class="icon fa fa-star "></span>
-                        <span class="icon fa fa-star "></span>
-                      </label>
-                      <label>
-                        <input type="radio" name="stars" value="4" />
-                        <span class="icon fa fa-star "></span>
-                        <span class="icon fa fa-star "></span>
-                        <span class="icon fa fa-star "></span>
-                        <span class="icon fa fa-star "></span>
-                      </label>
-                      <label>
-                        <input type="radio" name="stars" value="5" />
-                        <span class="icon fa fa-star "></span>
-                        <span class="icon fa fa-star "></span>
-                        <span class="icon fa fa-star "></span>
-                        <span class="icon fa fa-star "></span>
-                        <span class="icon fa fa-star "></span>
-                      </label>
-                    </form>
                     <form class="review" method="post">
-                    <div style="width:200px; padding-top:10px">
-                      {{ form.csrf_token }}
-              				{{ form.username(class="w3-border w3-padding", placeholder="Enter your name.") }}
-                    </div>
-                    <div style="display:block; padding-top:10px">
-                      {{ form.content(class="w3-border w3-padding", style="height:100px; width: 100%", placeholder="Enter comment...") }}
-                    </div>
+                      <div class="rating">
+                        <label>
+                          <input type="radio" name="stars" value="1" />
+                          <span class="icon fa fa-star "></span>
+                        </label>
+                        <label>
+                          <input type="radio" name="stars" value="2" />
+                          <span class="icon fa fa-star "></span>
+                          <span class="icon fa fa-star "></span>
+                        </label>
+                        <label>
+                          <input type="radio" name="stars" value="3" />
+                          <span class="icon fa fa-star "></span>
+                          <span class="icon fa fa-star "></span>
+                          <span class="icon fa fa-star "></span>
+                        </label>
+                        <label>
+                          <input type="radio" name="stars" value="4" />
+                          <span class="icon fa fa-star "></span>
+                          <span class="icon fa fa-star "></span>
+                          <span class="icon fa fa-star "></span>
+                          <span class="icon fa fa-star "></span>
+                        </label>
+                        <label>
+                          <input type="radio" name="stars" value="5" />
+                          <span class="icon fa fa-star "></span>
+                          <span class="icon fa fa-star "></span>
+                          <span class="icon fa fa-star "></span>
+                          <span class="icon fa fa-star "></span>
+                          <span class="icon fa fa-star "></span>
+                        </label>
+                      </div>
+                      <div style="width:200px; padding-top:10px">
+                        {{ form.csrf_token }}
+                        {{ form.username(class="w3-border w3-padding", placeholder="Enter your name.") }}
+                      </div>
+                      <div style="display:block; padding-top:10px">
+                        {{ form.content(class="w3-border w3-padding", style="height:100px; width: 100%", placeholder="Enter comment...") }}
+                      </div>
                     <button type="submit" class="w3-button w3-margin-bottom" style="background-color:#4a6eb0;color:white"><i class="fa fa-pencil"></i>  Post</button>
                   </form>
                 </div>
