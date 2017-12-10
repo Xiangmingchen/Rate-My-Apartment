@@ -1,21 +1,28 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
 <style>
 .card {
 	width:230px;
-	height:280px;
+	height:310px;
 	float:left;
-	padding:15px; 
+	padding:15px;
 	margin:10px;
 }
 
 img {
 	width:100%;
-	height:65%;
+	height:60%;
     page-break-inside:avoid;
     border-radius:calc(0.25rem - 1px);
+}
+
+.checked {
+    color: #4a6eb0;
+}
+
+.notchecked {
+  color:#bbb
 }
 </style>
 
@@ -25,10 +32,12 @@ img {
     <div class="w3-light-grey w3-display-container w3-card">
         <div class="w3-container w3-display-container">
             <hr>
-            <form action="/action_page.php" target="_blank">
+            <form method="POST">
                 <p><label><i class="fa fa-location-arrow"></i> Location</label></p>
-                <input class="w3-input w3-border" type="text" placeholder="" required>                  
-                <p><button class="w3-button w3-block w3-blue-grey w3-left-align" type="submit"><i class="fa fa-search w3-margin-right"></i> Search</button></p>
+					{{ form.csrf_token }}{{ form.search(class="w3-input w3-border", type="text", autocomplete="off") }}
+                <p><button class="w3-button w3-block w3-blue-grey w3-left-align" type="submit">
+					<i class="fa fa-search w3-margin-right"></i> Search</button>
+				</p>
             </form>
         </div>
     </div>
@@ -45,7 +54,21 @@ img {
 				<img src="{{ url_for('static', filename='images/Noimage.png') }}">
 				{% endif %}
 			</a>
-			<p style="padding-top:10px">{{apartments[count[0]].address[0].street}}<br>${{apartments[count[0]].rentPerMonth}} &#47; month</p>
+			<p style="padding-top:10px">{{apartments[count[0]].address[0].street}}<br>
+				{% if apartments[count[0]].rentPerMonth == None: %}
+					Unknown Rate
+				{% else: %}
+					${{apartments[count[0]].rentPerMonth}} &#47; month
+				{% endif %}
+			</p>
+			<div style="margin-top:-13px">
+				<span class="fa fa-star checked"></span>
+				<span class="fa fa-star checked"></span>
+				<span class="fa fa-star checked"></span>
+				<span class="fa fa-star checked"></span>
+				<span class="fa fa-star notchecked"></span>
+				<span>(111 Reviews)</span>
+			</div>
 		{% if count.append(count.pop() + 1) %}{% endif %}
 		</div>
 	 {% endfor %}
