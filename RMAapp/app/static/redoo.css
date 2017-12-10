@@ -145,13 +145,6 @@ p {
     color: white;
 }
 
-/* Individual bars */
-.bar-5 {width: 60%; height: 22px; background-color: #4a6eb0;}
-.bar-4 {width: 30%; height: 22px; background-color: #6181bd;}
-.bar-3 {width: 10%; height: 22px; background-color: #7a95c7;}
-.bar-2 {width: 4%; height: 22px; background-color: #92a8d1;}
-.bar-1 {width: 15%; height: 22px; background-color: #a9badb;}
-
 /* Responsive layout - make the columns stack on top of each other instead of next to each other */
 @media (max-width: 400px) {
     .side, .middle {
@@ -166,26 +159,74 @@ p {
   text-indent: 25px;
 }
 
+.icon {
+    margin:3px; 
+}
+
 .rating {
-	unicode-bidi: bidi-override;
-	direction: rtl;
-  text-align: left;
-  color: #bbb
+display: inline-block;
+position: relative;
+height: 20px;
+line-height: 20px;
+font-size: 20px;
 }
-.rating > span {
-	display: inline-block;
-	position: relative;
-	width: 20px;
+
+.rating label {
+position: absolute;
+top: 0;
+left: 0;
+height: 100%;
+cursor: pointer;
 }
-.rating > span:hover,
-.rating > span:hover ~ span {
-	color: lightgray;
+
+.rating label:last-child {
+position: static;
 }
-.rating > span:hover:before,
-.rating > span:hover ~ span:before {
-	position: relative;
-	left: 0;
-	color:#4a6eb0;
+
+.rating label:nth-child(1) {
+z-index: 5;
+}
+
+.rating label:nth-child(2) {
+z-index: 4;
+}
+
+.rating label:nth-child(3) {
+z-index: 3;
+}
+
+.rating label:nth-child(4) {
+z-index: 2;
+}
+
+.rating label:nth-child(5) {
+z-index: 1;
+}
+
+.rating label input {
+position: absolute;
+top: 0;
+left: 0;
+opacity: 0;
+}
+
+.rating label .icon {
+float: left;
+color: transparent;
+}
+
+.rating label:last-child .icon {
+color: #bbb;
+}
+
+.rating:not(:hover) label input:checked ~ .icon,
+.rating:hover label:hover input ~ .icon {
+color: #4a6eb0;
+}
+
+.rating label input:focus:not(:checked) ~ .icon:last-child {
+color: #bbb;
+text-shadow: 0 0 5px #4a6eb0;
 }
 
 .rating-display.r0 > i{
