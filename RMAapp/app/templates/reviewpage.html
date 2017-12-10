@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='final.css') }}">
 
 <div class="w3-main w3-white w3-content w3-padding" style="max-width:1450px;margin-top:40px">
     <div class="w3-container">
@@ -74,8 +73,8 @@
               {% endif %}
               <!-- parking -->
               {% if apartment.details[0].parking_type != None: %}
-                <div class="w3-col s12">
-                  <p><i class="fa fa-fw fa-product-hunt w3-medium"></i> Parking: {{ apartment.details[0].parking_type }}</p>
+                <div class="w3-col s6">
+                  <p><i class="fa fa-fw fa-product-hunt w3-medium"></i> Parking</p>
                 </div>
               {% endif %}
               <!-- heating -->
@@ -203,7 +202,9 @@
                   <i class="fa fa-star"></i>
                 </div>
                 <p>{{apartment.review[i].content}}</p>
-                <hr style="margin:10px">
+                {% if i != 0: %}
+                  <hr style="margin:10px">
+                {% endif %}
               {% endfor %}
             </div>
           </div>
