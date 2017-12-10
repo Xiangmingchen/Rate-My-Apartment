@@ -190,16 +190,23 @@
               <div class="w3-card w3-round w3-white">
                 <div class="w3-container w3-padding">
                   <h4><strong>Leave your opinion here</strong></h4>
-                  <div class="rating" style="margin-top:8px">
-                    <span class="fa fa-star"></span>
-                    <span class="fa fa-star"></span>
-                    <span class="fa fa-star"></span>
-                    <span class="fa fa-star"></span>
-                    <span class="fa fa-star"></span>
-                  </div>
-                  <p contenteditable="true" class="w3-border w3-padding" style="width:200px">Enter your name.</p>
-                  <p contenteditable="true" class="w3-border w3-padding" style="height:100px">Enter comment...</p>
-                  <button type="button" class="w3-button w3-margin-bottom" style="background-color:#4a6eb0;color:white"><i class="fa fa-pencil"></i>  Post</button>
+                  {{ form.csrf_token }}
+                  <form class="review" method="post">
+                    <div class="rating" style="margin-top:8px">
+                      <span class="fa fa-star"></span>
+                      <span class="fa fa-star"></span>
+                      <span class="fa fa-star"></span>
+                      <span class="fa fa-star"></span>
+                      <span class="fa fa-star"></span>
+                    </div>
+                    <div style="width:200px; padding-top:10px">
+              				{{ form.username(class="w3-border w3-padding", placeholder="Enter your name.") }}
+                    </div>
+                    <div style="display:block; padding-top:10px">
+                      {{ form.comment(class="w3-border w3-padding", style="height:100px; width: 100%", placeholder="Enter comment...") }}
+                    </div>
+                    <button type="submit" class="w3-button w3-margin-bottom" style="background-color:#4a6eb0;color:white"><i class="fa fa-pencil"></i>  Post</button>
+                  </form>
                 </div>
               </div>
             </div>

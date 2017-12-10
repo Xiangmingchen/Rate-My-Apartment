@@ -1,7 +1,7 @@
 from flask import Flask, render_template, flash, redirect, request, url_for
 from app import app, db, data
 from app.models import Apartment, Address, City
-from app.forms import SearchForm
+from app.forms import SearchForm, ReviewForm
 import math
 
 
@@ -56,11 +56,13 @@ def reviewpage(zpid):
         return int(a)
     def string(a):
         return str(a)
+    form = ReviewForm()
     return render_template('reviewpage.html', title=this_apart.address[0].street,
                                               apartment=this_apart, \
                                               len=length,\
                                               int=integer,\
-                                              str=string)
+                                              str=string,\
+                                              form=form)
 
 @app.route('/database/update')
 def update_database():
