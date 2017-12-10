@@ -47,24 +47,22 @@ def filter(search=None):
                             length=len(apartments), \
                             len=length, form=form)
 
-@app.route('/reviewpage/<int:zpid>')
-def reviewpage(zpid):
+@app.route('/reviewpage/<int:zpid>', methods=['GET', 'POST'])
+def reviewpage(zpid, submitted=False):
     this_apart = db.session.query(Apartment).filter(Apartment.zpid == zpid).one_or_none()
-    submitted = False
     form = ReviewForm()
     # when a review is submitted
     if form.validate_on_submit():
         username = form.username.data
         rating = form.rating.data
-        content = form.comment.data
+        content = form.content.data
         timestamp = datetime.date.today()
         new_review = Review(user_name=username, content=content, rating=rating, time_stamp=timestamp)
         this_apart.average_rating = (this_apart.average_rating * this_apart.review_number + rating) / (this_apart.review_number + 1)
         this_apart.review_number += 1
         this_apart.review.append(new_review)
         db.session.commit()
-        submitted = True
-        flash('Thank you for your comments!')
+        return redirect(url_for('reviewpage', zpid=zpid, submitted=True))
 
     def length(a):
         return len(a)
