@@ -1,6 +1,8 @@
 CS196 Project - Rate My Apartment
 
-![alt text] (https://github.com/CS196Illinois/Rate-My-Apartment/blob/master/images/landing%20page.png)
+<br>
+<img src= "https://github.com/CS196Illinois/Rate-My-Apartment/blob/master/images/landing%20page.png"/>
+<br>
 
 Project Contributor: Yiyin Shen, Siyuan Teng, Xiangming Chen, Rick Iwanaga
 Project Manager(Mentor): Anna B.
@@ -39,9 +41,13 @@ Please check out the descriptions below to understand: 1. What we did, 2. What W
         
     -Upload review of apartments through review page
         >Name, rating, & review details are stored
-        
-![alt text]  (https://github.com/CS196Illinois/Rate-My-Apartment/blob/master/images/listing.png)
-![alt text]  (https://github.com/CS196Illinois/Rate-My-Apartment/blob/master/images/reviewpage.png)
+<br>
+<img src= "https://github.com/CS196Illinois/Rate-My-Apartment/blob/master/images/listing.png"/>
+<br>
+
+<br>
+<img src= "https://github.com/CS196Illinois/Rate-My-Apartment/blob/master/images/reviewpage.png"/>
+<br>  
 
 3 What we can improve:
 
