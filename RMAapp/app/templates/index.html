@@ -33,7 +33,7 @@ img {
         <div class="w3-container w3-display-container">
             <hr>
             <form method="POST">
-                <p><label><i class="fa fa-location-arrow"></i> Location</label></p>
+                <p><label><i class="fa fa-location-arrow"></i> Search City</label></p>
 					{{ form.csrf_token }}{{ form.search(class="w3-input w3-border", type="text", autocomplete="off") }}
                 <p><button class="w3-button w3-block w3-blue-grey w3-left-align" type="submit">
 					<i class="fa fa-search w3-margin-right"></i> Search</button>
@@ -43,7 +43,7 @@ img {
     </div>
 </div>
 
-<div class="w3-threequarter w3-grayscale-min" style="text-align: center;">
+<div class="w3-threequarter w3-grayscale-min" style="display:flex; flex-flow:row wrap; justify-content: space-around; align-items:space-around; text-align:center">
 	{% set count = [0] %}
 		{% for j in range(length): %}
 		<div class="card m1 l1 w3-card">
@@ -54,20 +54,20 @@ img {
 				<img src="{{ url_for('static', filename='images/Noimage.png') }}">
 				{% endif %}
 			</a>
-			<p style="padding-top:10px">{{apartments[count[0]].address[0].street}}<br>
+			<p style="font-size:15px">{{apartments[count[0]].address[0].street}}<br>
 				{% if apartments[count[0]].rentPerMonth == None: %}
 					Unknown Rate
 				{% else: %}
 					${{apartments[count[0]].rentPerMonth}} &#47; month
 				{% endif %}
 			</p>
-			<div style="margin-top:-13px">
-				<span class="fa fa-star checked"></span>
-				<span class="fa fa-star checked"></span>
-				<span class="fa fa-star checked"></span>
-				<span class="fa fa-star checked"></span>
-				<span class="fa fa-star notchecked"></span>
-				<span>(111 Reviews)</span>
+			<div class="rating-display {{"r"+str(int(apartments[count[0]].average_rating))}}" style="margin-top:-16px">
+				<i class="fa fa-star w3-medium"></i>
+				<i class="fa fa-star w3-medium"></i>
+				<i class="fa fa-star w3-medium"></i>
+				<i class="fa fa-star w3-medium"></i>
+				<i class="fa fa-star w3-medium"></i>
+				<span>({{apartments[count[0]].review_number}} Reviews)</span>
 			</div>
 		{% if count.append(count.pop() + 1) %}{% endif %}
 		</div>

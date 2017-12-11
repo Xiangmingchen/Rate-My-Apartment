@@ -21,7 +21,6 @@ def filter(search=None):
     apartments = db.session.query(Apartment) \
                         .order_by(Apartment.image_count.desc()) \
                         .all()
-
     # if you want to only display the apartments in a certain city, put the city
     # zipcode at centerZipcode, and enable the following lines
     search = search.capitalize()
@@ -35,9 +34,12 @@ def filter(search=None):
             apartments = city.apartments
 
     # Sort apartments based on rating TODO
-
     def length(a):
         return len(a)
+    def rounD(a):
+        return round(a)
+    def string(a):
+        return str(a)
     if form.validate_on_submit():
         search = form.search.data
         return redirect(url_for('filter', search=search))
@@ -45,38 +47,41 @@ def filter(search=None):
                             apartments=apartments, \
                             rows=math.ceil(len(apartments) / 3),\
                             length=len(apartments), \
-                            len=length, form=form)
+                            len=length, form=form,int=rounD,\
+                            str=string)
 
 @app.route('/reviewpage/<int:zpid>', methods=['GET', 'POST'])
-def reviewpage(zpid, submitted=False):
+def reviewpage(zpid):
     this_apart = db.session.query(Apartment).filter(Apartment.zpid == zpid).one_or_none()
     form = ReviewForm()
     # when a review is submitted
-    if form.validate_on_submit():
-        username = form.username.data
-        rating = form.rating.data
-        content = form.content.data
-        timestamp = datetime.date.today()
-        new_review = Review(user_name=username, content=content, rating=rating, time_stamp=timestamp)
-        this_apart.average_rating = (this_apart.average_rating * this_apart.review_number + rating) / (this_apart.review_number + 1)
-        this_apart.review_number += 1
-        this_apart.review.append(new_review)
-        db.session.commit()
-        return redirect(url_for('reviewpage', zpid=zpid, submitted=True))
-
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            username = form.username.data
+            rating = int(form.rating.data)
+            content = form.content.data
+            timestamp = datetime.date.today()
+            new_review = Review(user_name=username, content=content, rating=rating, time_stamp=timestamp)
+            this_apart.average_rating = (this_apart.average_rating * this_apart.review_number + rating) / (this_apart.review_number + 1)
+            this_apart.review_number += 1
+            this_apart.review.append(new_review)
+            db.session.commit()
+            flash('Thank you for submitting your comments!')
+            return redirect(url_for('reviewpage', zpid=zpid))
+        else:
+            pass
     def length(a):
         return len(a)
-    def integer(a):
-        return int(a)
+    def rounD(a):
+        return round(a)
     def string(a):
         return str(a)
     return render_template('reviewpage.html', title=this_apart.address[0].street,
                                               apartment=this_apart, \
                                               len=length,\
-                                              int=integer,\
+                                              int=rounD,\
                                               str=string,\
-                                              form=form,\
-                                              submitted=submitted)
+                                              form=form)
 
 @app.route('/database/update')
 def update_database():
@@ -86,12 +91,10 @@ def update_database():
     return 'Database updated'
 
 # 89045947
-@app.route('/center_request/<zpid>')
+@app.route('/center_request/<int:zpid>')
 def center_request(zpid):
-    request_success = data.center_request(zpid)
-    if not request_success:
-        return 'Request failed'
-    return 'Request succeeded'
+    new_apart_count = data.center_request(zpid)
+    return 'Request created %i new apartments' % new_apart_count
 
 @app.route('/database/query_address/<int:zpid>')
 def database(zpid):
@@ -144,5 +147,9 @@ def delete_address(id):
 @app.route('/database/store_response/<int:zpid>')
 def store_response(zpid):
     return data.store_response_file(zpid)
+
+@app.route('/database/store_comps/<int:zpid>')
+def store_comps(zpid):
+    return data.store_comps_file(zpid)
 
 app.secret_key = 'CS196'
