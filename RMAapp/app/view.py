@@ -64,6 +64,7 @@ def reviewpage(zpid, submitted=False):
         this_apart.review_number += 1
         this_apart.review.append(new_review)
         db.session.commit()
+        flash('Thank you for submitting your comments!')
         return redirect(url_for('reviewpage', zpid=zpid, submitted=True))
     # define helper function for this page
     def length(a):

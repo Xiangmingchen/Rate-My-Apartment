@@ -130,11 +130,15 @@
             <p>{{"{:0.2}".format(apartment.average_rating)}} based on {{apartment.review_number}} reviews.</p>
           </div>
           <!-- submit success message -->
-          {% if submitted: %}
-            <div class="w3-row-padding w3-margin-top w3-margin-left w3-panel w3-green">
-              <h5>Thank you for submitting your comments!</h5>
-            </div>
-          {% endif %}
+          {% with messages = get_flashed_messages() %}
+            {% if messages %}
+              <div class="w3-row-padding w3-margin-top w3-margin-left w3-panel w3-green">
+              {% for message in messages %}
+                <p>{{message}}</p>
+              {% endfor %}
+              </div>
+            {% endif %}
+          {% endwith %}
           <!-- Adding new comment section -->
           <div class="w3-row-padding w3-margin-top">
             <div class="w3-col m12">
@@ -174,12 +178,36 @@
                           <span class="icon fa fa-star "></span>
                         </label>
                       </div>
+                      <!-- rating error message -->
+                      {% for fieldName, errorMessages in form.errors.items() %}
+                          {% if fieldName == "rating" %}
+                            {% for err in errorMessages %}
+                              <p class="err">{{err}}</p>
+                            {% endfor %}
+                          {% endif %}
+                      {% endfor %}
                       <div style="width:200px; padding-top:10px">
                         {{ form.csrf_token }}
                         {{ form.username(class="w3-border w3-padding", placeholder="Enter your name.") }}
+                        <!-- username error message -->
+                        {% for fieldName, errorMessages in form.errors.items() %}
+                          {% if fieldName == "username" %}
+                            {% for err in errorMessages %}
+                              <p class="err">{{err}}</p>
+                            {% endfor %}
+                          {% endif %}
+                        {% endfor %}
                       </div>
                       <div style="display:block; padding-top:10px">
                         {{ form.content(class="w3-border w3-padding", style="height:100px; width: 100%", placeholder="Enter comment...") }}
+                        <!-- content error message -->
+                        {% for fieldName, errorMessages in form.errors.items() %}
+                          {% if fieldName == "content" %}
+                            {% for err in errorMessages %}
+                              <p class="err">{{err}}</p>
+                            {% endfor %}
+                          {% endif %}
+                        {% endfor %}
                       </div>
                     <button type="submit" class="w3-button w3-margin-bottom" style="background-color:#4a6eb0;color:white;margin-top:5px"><i class="fa fa-pencil"></i>  Post</button>
                   </form>
