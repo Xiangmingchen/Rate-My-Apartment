@@ -193,7 +193,7 @@ p {
 }
 
 .icon {
-    margin:3px; 
+    margin:3px;
 }
 
 .rating {
@@ -260,6 +260,10 @@ color: #4a6eb0;
 .rating label input:focus:not(:checked) ~ .icon:last-child {
 color: #bbb;
 text-shadow: 0 0 5px #4a6eb0;
+}
+
+.err {
+	color:red;
 }
 
 .scrollbar

@@ -27,14 +27,14 @@ img {
 </style>
 
 <div class="w3-main w3-content w3-padding" style="max-width:1450px;margin-top:40px">
-
+<!-- Search Sidebar -->
 <div class="w3-quarter" style="padding:12px;padding-top:11px">
     <div class="w3-light-grey w3-display-container w3-card">
         <div class="w3-container w3-display-container">
             <hr>
             <form method="POST">
                 <p><label><i class="fa fa-location-arrow"></i> Search City</label></p>
-					{{ form.csrf_token }}{{ form.search(class="w3-input w3-border", type="text", autocomplete="off") }}
+									{{ form.csrf_token }}{{ form.search(class="w3-input w3-border", type="text", autocomplete="off") }}
                 <p><button class="w3-button w3-block w3-blue-grey w3-left-align" type="submit">
 					<i class="fa fa-search w3-margin-right"></i> Search</button>
 				</p>
@@ -42,11 +42,12 @@ img {
         </div>
     </div>
 </div>
-
+<!-- Apartments Display -->
 <div class="w3-threequarter w3-grayscale-min" style="display:flex; flex-flow:row wrap; justify-content: space-around; align-items:space-around; text-align:center">
 	{% set count = [0] %}
 		{% for j in range(length): %}
 		<div class="card m1 l1 w3-card">
+			<!-- Clickable Image -->
 			<a href="{{ url_for('reviewpage', zpid=apartments[count[0]].zpid) }}">
 				{% if len(apartments[count[0]].image) != 0: %}
     	    	<img src="{{apartments[count[0]].image[0].url}}">
@@ -54,6 +55,7 @@ img {
 				<img src="{{ url_for('static', filename='images/Noimage.png') }}">
 				{% endif %}
 			</a>
+			<!-- Apartment Rent Rate -->
 			<p style="font-size:15px">{{apartments[count[0]].address[0].street}}<br>
 				{% if apartments[count[0]].rentPerMonth == None: %}
 					Unknown Rate
@@ -61,6 +63,7 @@ img {
 					${{apartments[count[0]].rentPerMonth}} &#47; month
 				{% endif %}
 			</p>
+			<!-- Apartment Rating Display -->
 			<div class="rating-display {{"r"+str(int(apartments[count[0]].average_rating))}}" style="margin-top:-16px">
 				<i class="fa fa-star w3-medium"></i>
 				<i class="fa fa-star w3-medium"></i>

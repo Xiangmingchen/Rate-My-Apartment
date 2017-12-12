@@ -36,12 +36,14 @@
 					<!-- Rooms -->
 					<h4><strong>Rooms</strong></h4>
           <div class="w3-row w3-medium">
+            <!-- bathroom -->
             <div class="w3-col s6">
               <p><i class="fa fa-fw fa-bath"></i> Bathrooms:
 								{% if apartment.details[0].bathrooms != None: %}
 									{{ apartment.details[0].bathrooms }}
 								{% else: %} Unknown {% endif %}</p>
             </div>
+            <!-- bedroom -->
             <div class="w3-col s6">
               <p><i class="fa fa-fw fa-bed"></i> Bedrooms:
 									{% if apartment.details[0].bedrooms != None: %}
@@ -49,7 +51,7 @@
                   {% else: %} Unknown {% endif %}</p>
             </div>
           </div>
-
+          <!-- other rooms -->
           {% if len(apartment.rooms) > 0: %}
           <div class="w3-row w3-medium">
             {% for i in range(len(apartment.rooms)): %}
@@ -89,6 +91,7 @@
                   <p><i class="fa fa-fw fa-snowflake-o w3-medium"></i> Cooling</p>
                 </div>
               {% endif %}
+              <!-- other amentities -->
 							{% for i in range(len(apartment.amentities)): %}
 		            <div class="w3-col s6">
 		              <p><i class="fa fa-fw fa-circle w3-medium"></i> {{ apartment.amentities[i].name }}</p>
@@ -107,13 +110,13 @@
 					{% endif %}
         </div>
 
-
+        <!-- google map -->
         <section id="google map" class="w3-card w3-round w3-margin-top">
           <div id="map" style="width:100%;height:400px"></div>
         </section>
-
       </div>
-      <!-- rating display -->
+
+      <!-- rating display section -->
       <div id="right" class="w3-half" style="padding:10px">
           <div class="w3-container w3-card w3-white w3-round w3-margin-left w3-margin-right w3-padding"><br>
             <div class="rating-display {{"r"+str(int(apartment.average_rating))}}">
@@ -127,12 +130,16 @@
             <p>{{"{:0.2}".format(apartment.average_rating)}} based on {{apartment.review_number}} reviews.</p>
           </div>
           <!-- submit success message -->
-          {% if submitted: %}
-            <div class="w3-row-padding w3-margin-top w3-margin-left w3-panel w3-green">
-              <h5>Thank you for submitting your comments!</h5>
-            </div>
-          {% endif %}
-          <!-- Adding rating -->
+          {% with messages = get_flashed_messages() %}
+            {% if messages %}
+              <div class="w3-row-padding w3-margin-top w3-margin-left w3-panel w3-green">
+              {% for message in messages %}
+                <p>{{message}}</p>
+              {% endfor %}
+              </div>
+            {% endif %}
+          {% endwith %}
+          <!-- Adding new comment section -->
           <div class="w3-row-padding w3-margin-top">
             <div class="w3-col m12">
               <div class="w3-card w3-round w3-white">
@@ -171,12 +178,36 @@
                           <span class="icon fa fa-star "></span>
                         </label>
                       </div>
+                      <!-- rating error message -->
+                      {% for fieldName, errorMessages in form.errors.items() %}
+                          {% if fieldName == "rating" %}
+                            {% for err in errorMessages %}
+                              <p class="err">{{err}}</p>
+                            {% endfor %}
+                          {% endif %}
+                      {% endfor %}
                       <div style="width:200px; padding-top:10px">
                         {{ form.csrf_token }}
                         {{ form.username(class="w3-border w3-padding", placeholder="Enter your name.") }}
+                        <!-- username error message -->
+                        {% for fieldName, errorMessages in form.errors.items() %}
+                          {% if fieldName == "username" %}
+                            {% for err in errorMessages %}
+                              <p class="err">{{err}}</p>
+                            {% endfor %}
+                          {% endif %}
+                        {% endfor %}
                       </div>
                       <div style="display:block; padding-top:10px">
                         {{ form.content(class="w3-border w3-padding", style="height:100px; width: 100%", placeholder="Enter comment...") }}
+                        <!-- content error message -->
+                        {% for fieldName, errorMessages in form.errors.items() %}
+                          {% if fieldName == "content" %}
+                            {% for err in errorMessages %}
+                              <p class="err">{{err}}</p>
+                            {% endfor %}
+                          {% endif %}
+                        {% endfor %}
                       </div>
                     <button type="submit" class="w3-button w3-margin-bottom" style="background-color:#4a6eb0;color:white;margin-top:5px"><i class="fa fa-pencil"></i>  Post</button>
                   </form>
@@ -212,6 +243,7 @@
     </div>
 
 <script>
+// google map
 function initMap() {
         var uluru = {lat: {{apartment.address[0].latitude}}, lng: {{apartment.address[0].longitude}}};
         var map = new google.maps.Map(document.getElementById('map'), {
@@ -223,7 +255,7 @@ function initMap() {
           map: map
         });
       }
-
+// picture slides
 var slideIndex = 1;
 showSlides(slideIndex);
 
