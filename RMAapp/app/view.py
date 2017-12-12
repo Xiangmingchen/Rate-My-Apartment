@@ -4,42 +4,37 @@ from app.models import Apartment, Address, City, Review
 from app.forms import SearchForm, ReviewForm
 import math, datetime
 
-
+# Home page
 @app.route('/', methods=['GET', 'POST'])
 def homepage():
     form = SearchForm()
+    # when provided a valid search, redirect to filter page
     if form.validate_on_submit():
         search = form.search.data
         return redirect(url_for('filter', search=search))
     return render_template('home.html', title="Rate My Apartment", form=form)
 
 
+# Filter page
 @app.route('/filter/<search>', methods=['GET', 'POST'])
 def filter(search=None):
     form = SearchForm()
-    # Dispay the apartments with pictures first
-    apartments = db.session.query(Apartment) \
-                        .order_by(Apartment.image_count.desc()) \
-                        .all()
-    # if you want to only display the apartments in a certain city, put the city
-    # zipcode at centerZipcode, and enable the following lines
+    # Search for the city
     search = search.capitalize()
-    local_apart = []
     if search is not None:
         city = db.session.query(City).filter(City.name == search).one_or_none()
         if city == None:
-            # TODO display error page
             apartments = []
         else:
             apartments = city.apartments
-
-    # Sort apartments based on rating TODO
+    # define helper functions that will be used in the page
     def length(a):
         return len(a)
     def rounD(a):
         return round(a)
     def string(a):
         return str(a)
+    # when search again, redirect back to this page with the new search keyword
     if form.validate_on_submit():
         search = form.search.data
         return redirect(url_for('filter', search=search))
@@ -50,106 +45,41 @@ def filter(search=None):
                             len=length, form=form,int=rounD,\
                             str=string)
 
+# Review page
+# take in zpid as parameter
 @app.route('/reviewpage/<int:zpid>', methods=['GET', 'POST'])
-def reviewpage(zpid):
+def reviewpage(zpid, submitted=False):
+    # query the databse for this apartment
     this_apart = db.session.query(Apartment).filter(Apartment.zpid == zpid).one_or_none()
     form = ReviewForm()
     # when a review is submitted
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            username = form.username.data
-            rating = int(form.rating.data)
-            content = form.content.data
-            timestamp = datetime.date.today()
-            new_review = Review(user_name=username, content=content, rating=rating, time_stamp=timestamp)
-            this_apart.average_rating = (this_apart.average_rating * this_apart.review_number + rating) / (this_apart.review_number + 1)
-            this_apart.review_number += 1
-            this_apart.review.append(new_review)
-            db.session.commit()
-            flash('Thank you for submitting your comments!')
-            return redirect(url_for('reviewpage', zpid=zpid))
-        else:
-            pass
+    if form.validate_on_submit():
+        # store this review, and add this rating score to the apartment's overall
+        username = form.username.data
+        rating = int(form.rating.data)
+        content = form.content.data
+        timestamp = datetime.date.today()
+        new_review = Review(user_name=username, content=content, rating=rating, time_stamp=timestamp)
+        this_apart.average_rating = (this_apart.average_rating * this_apart.review_number + rating) / (this_apart.review_number + 1)
+        this_apart.review_number += 1
+        this_apart.review.append(new_review)
+        db.session.commit()
+        flash('Thank you for submitting your comments!')
+        return redirect(url_for('reviewpage', zpid=zpid, submitted=True))
+    # define helper function for this page
     def length(a):
         return len(a)
     def rounD(a):
         return round(a)
     def string(a):
         return str(a)
-    return render_template('reviewpage.html', title=this_apart.address[0].street,
+    return render_template('reviewpage.html', title=this_apart.address[0].street, \
                                               apartment=this_apart, \
                                               len=length,\
                                               int=rounD,\
                                               str=string,\
-                                              form=form)
+                                              form=form,\
+                                              submitted=submitted)
 
-@app.route('/database/update')
-def update_database():
-    # zpid = 3197980
-    # data.centerRequest(zpid)
-    data.update_database()
-    return 'Database updated'
-
-# 89045947
-@app.route('/center_request/<int:zpid>')
-def center_request(zpid):
-    new_apart_count = data.center_request(zpid)
-    return 'Request created %i new apartments' % new_apart_count
-
-@app.route('/database/query_address/<int:zpid>')
-def database(zpid):
-    apartment = db.session.query(Apartment) \
-                        .filter(Apartment.zpid == zpid).one_or_none()
-    if apartment:
-        return 'Apartment address: %s' % (apartment.address[0].street + ' ' + apartment.address[0].city)
-    else:
-        return 'No apartment <%i> in database' % zpid
-
-@app.route('/database/expand')
-def expand_database():
-    new_apart_count = data.expand_database()
-    return 'Added %i apartments' % new_apart_count
-
-@app.route('/database/count/<table_name>')
-def count_database_rows(table_name):
-    count = data.count_rows(table_name)
-    if count >= 0:
-        return 'There are %i in %s database' % (count, table_name)
-    else:
-        return 'Invalid table name'
-
-@app.route('/database/show_data/<table_name>')
-def show_data(table_name):
-    return data.display_data(table_name)
-
-@app.route('/get_address/<int:zpid>')
-def getaddress(zpid):
-    return data.get_address(zpid)
-
-@app.route('/database/add_new_apartment/<address>/<int:zipcode>')
-def add_new_apartment(address, zipcode):
-    success = data.add_new_apartment(address, zipcode)
-    if success:
-        return 'Apartment added'
-    else:
-        return 'Apartment adding failed'
-
-@app.route('/database/delete_extra_address')
-def delete_extra_address():
-    count = data.delete_extra_address()
-    return 'Deleted %i address' % count
-
-@app.route('/database/delete_address/<int:id>')
-def delete_address(id):
-    success = data.delete_address_by_id(id)
-    return 'Address <id = %i> deletion %s' % (id, 'succeeded' if success else 'failed')
-
-@app.route('/database/store_response/<int:zpid>')
-def store_response(zpid):
-    return data.store_response_file(zpid)
-
-@app.route('/database/store_comps/<int:zpid>')
-def store_comps(zpid):
-    return data.store_comps_file(zpid)
 
 app.secret_key = 'CS196'
