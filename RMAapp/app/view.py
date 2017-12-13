@@ -1,8 +1,8 @@
 from flask import Flask, render_template, flash, redirect, request, url_for
 from app import app, db, data
-from app.models import Apartment, Address
-from app.forms import SearchForm
-import math
+from app.models import Apartment, Address, City, Review
+from app.forms import SearchForm, ReviewForm
+import math, datetime
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -11,12 +11,12 @@ def homepage():
     if form.validate_on_submit():
         search = form.search.data
         return redirect(url_for('filter', search=search))
-    return render_template('home.html', form=form)
+    return render_template('home.html', title="Rate My Apartment", form=form)
 
 
-@app.route('/filter/<search>')
+@app.route('/filter/<search>', methods=['GET', 'POST'])
 def filter(search=None):
-
+    form = SearchForm()
     # Dispay the apartments with pictures first
     apartments = db.session.query(Apartment) \
                         .order_by(Apartment.image_count.desc()) \
@@ -27,27 +27,56 @@ def filter(search=None):
     search = search.capitalize()
     local_apart = []
     if search is not None:
-        for apartment in apartments:
-            if apartment.address[0].city == search:
-                local_apart.append(apartment)
-        apartments = local_apart
+        city = db.session.query(City).filter(City.name == search).one_or_none()
+        if city == None:
+            # TODO display error page
+            apartments = []
+        else:
+            apartments = city.apartments
+
+    # Sort apartments based on rating TODO
 
     def length(a):
         return len(a)
-
-    return render_template('index.html', title='Home', \
+    if form.validate_on_submit():
+        search = form.search.data
+        return redirect(url_for('filter', search=search))
+    return render_template('index.html', title='Search ' + search, \
                             apartments=apartments, \
                             rows=math.ceil(len(apartments) / 3),\
                             length=len(apartments), \
-                            len=length)
+                            len=length, form=form)
 
-@app.route('/reviewpage/<int:zpid>')
-def reviewpage(zpid):
+@app.route('/reviewpage/<int:zpid>', methods=['GET', 'POST'])
+def reviewpage(zpid, submitted=False):
     this_apart = db.session.query(Apartment).filter(Apartment.zpid == zpid).one_or_none()
+    form = ReviewForm()
+    # when a review is submitted
+    if form.validate_on_submit():
+        username = form.username.data
+        rating = form.rating.data
+        content = form.content.data
+        timestamp = datetime.date.today()
+        new_review = Review(user_name=username, content=content, rating=rating, time_stamp=timestamp)
+        this_apart.average_rating = (this_apart.average_rating * this_apart.review_number + rating) / (this_apart.review_number + 1)
+        this_apart.review_number += 1
+        this_apart.review.append(new_review)
+        db.session.commit()
+        return redirect(url_for('reviewpage', zpid=zpid, submitted=True))
+
     def length(a):
         return len(a)
-    return render_template('reviewpage.html', apartment=this_apart, \
-                                              len=length)
+    def integer(a):
+        return int(a)
+    def string(a):
+        return str(a)
+    return render_template('reviewpage.html', title=this_apart.address[0].street,
+                                              apartment=this_apart, \
+                                              len=length,\
+                                              int=integer,\
+                                              str=string,\
+                                              form=form,\
+                                              submitted=submitted)
 
 @app.route('/database/update')
 def update_database():
