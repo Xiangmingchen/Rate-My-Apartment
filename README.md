@@ -1,4 +1,4 @@
-#CS196 Project - Rate My Apartment
+# CS196 Project - Rate My Apartment
 
 <br>
 <img src= "https://github.com/CS196Illinois/Rate-My-Apartment/blob/master/images/landing%20page.png"/>
