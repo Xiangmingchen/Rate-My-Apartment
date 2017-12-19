@@ -2,9 +2,9 @@ import requests
 from xml.etree.ElementTree import fromstring, ElementTree
 import xml.dom.minidom
 from lxml import html, etree
-from app import ZillowAPI, db
+from RMAapp.app import db, ZillowAPI
 from sqlalchemy import create_engine, func
-from app.models import Apartment, Address, Image, Review, Details, Rooms, Amentities, City
+from RMAapp.app.models import Apartment, Address, Image, Review, Details, Rooms, Amentities, City
 
 ## --------------- Interface functions --------------------
 # Update the entire database

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, flash, redirect, request, url_for
-from app import app, db, data
-from app.models import Apartment, Address, City, Review
-from app.forms import SearchForm, ReviewForm
+from RMAapp.app import app, db
+from RMAapp.app.models import Apartment, Address, City, Review
+from RMAapp.app.forms import SearchForm, ReviewForm
 import math, datetime
 
 # Home page

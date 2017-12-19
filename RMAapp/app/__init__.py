@@ -1,8 +1,10 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from RMAapp.config import DevelopmentConfig, ProductionConfig
+
 
 app = Flask(__name__)
-app.config.from_object('config')
+app.config.from_object(DevelopmentConfig)
 db = SQLAlchemy(app)
 
-from app import view
+from RMAapp.app import view

@@ -1,6 +1,6 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, Float, Text, Boolean, DateTime
 from sqlalchemy.orm import relationship
-from app import db
+from RMAapp.app import db
 
 # A class that represents Apartment table in the database
 class Apartment(db.Model):

@@ -9,10 +9,6 @@ RMAapp/.DS_Store
 RMAapp/app/.DS_Store
 RMAapp/app/templates/.DS_Store
 
-# pipenv
-Pipfile
-RMAapp/Pipfile
-RMAapp/Pipfile.lock
 
 # API key
 ZillowAPI.py
