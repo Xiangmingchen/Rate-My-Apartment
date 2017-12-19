@@ -52,7 +52,7 @@ img {
 				{% if len(apartments[count[0]].image) != 0: %}
     	    	<img src="{{apartments[count[0]].image[0].url}}">
 				{% else: %}
-				<img src="{{ url_for('static', filename='images/Noimage.png') }}">
+				<img src="{{ url_for('static', filename='images/NoImage.png') }}">
 				{% endif %}
 			</a>
 			<!-- Apartment Rent Rate -->
